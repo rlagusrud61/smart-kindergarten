@@ -1,0 +1,10 @@
+com/bigbrain/senseboard/BuildConfig.java
+ com.bigbrain.senseboard.BuildConfig
+com/bigbrain/senseboard/sensor/SensorTracker.java
+ com.bigbrain.senseboard.sensor.SensorTracker
+com/bigbrain/senseboard/sensor/SensorData.java
+ com.bigbrain.senseboard.sensor.SensorData
+com/bigbrain/senseboard/sensor/SensorHandler.java
+ com.bigbrain.senseboard.sensor.SensorHandler
+com/bigbrain/senseboard/MainActivity.java
+ com.bigbrain.senseboard.MainActivity
