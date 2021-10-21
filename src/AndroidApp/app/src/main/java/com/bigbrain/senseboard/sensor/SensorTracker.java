@@ -1,7 +1,11 @@
 package com.bigbrain.senseboard.sensor;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
+import android.hardware.Sensor;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -20,14 +24,15 @@ public class SensorTracker extends Thread {
      * @param context Sensor context
      * @param delay delay for sensor, e.g. SensorManager.SENSOR_DELAY_FASTEST
      * @param pollingDelay polling rate of this class on all sensors
-     * @param sensorTypes array of sensorTypes, e.g. [SensorManager.TYPE_ACCELEROMETER]
+     * @param sensorTypes array of sensorTypes, e.g. Sensor.TYPE_ACCELEROMETER
      */
-    public SensorTracker(Context context, int pollingDelay, int delay, int pollingRate1, int... sensorTypes) {
+    public SensorTracker(Context context, int pollingDelay, int delay, int... sensorTypes) {
         this.pollingDelay = pollingDelay;
         sensorHandlers = new SensorHandler[sensorTypes.length];
         for (int i = 0; i < sensorHandlers.length; i++) {
             sensorHandlers[i] = new SensorHandler(context, sensorTypes[i], delay);
         }
+        sensorData = new SensorData();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -45,7 +50,7 @@ public class SensorTracker extends Thread {
             }
 
             try {
-                sleep(20 - time % 20);
+                sleep(this.pollingDelay - time % this.pollingDelay);
             } catch(InterruptedException e) {
                 e.printStackTrace();
             }
