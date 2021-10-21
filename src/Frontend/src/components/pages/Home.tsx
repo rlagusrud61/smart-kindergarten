@@ -1,7 +1,8 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import logo from '../../img/logo.svg';
 import '../../styles/App.css';
-import {ClassroomClient} from "../../clients/rest/ApiClient";
+import '../../styles/tailwind.css'
+import { ClassroomClient } from "../../clients/rest/ApiClient";
 
 function Home() {
 
@@ -13,21 +14,10 @@ function Home() {
   })
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/components/pages/Home.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="grid grid-rows-3 grid-flow-col gap-4">
+      <div className="row-span-3 ...">1</div>
+      <div className="col-span-2 ...">2</div>
+      <div className="row-span-2 col-span-2 ...">3</div>
     </div>
   );
 }
