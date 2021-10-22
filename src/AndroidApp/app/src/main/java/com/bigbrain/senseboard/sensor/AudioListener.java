@@ -19,7 +19,7 @@ import com.bigbrain.senseboard.MainActivity;
 
 import java.util.Arrays;
 
-public class AudioListener {
+public class AudioListener extends Thread {
     private static final int PERMISSIONS_RECORD_AUDIO = 98;
     private MainActivity context;
 
@@ -39,8 +39,9 @@ public class AudioListener {
 
     }
 
+    @Override
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public void start() {
+    public void run() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -60,9 +61,9 @@ public class AudioListener {
         }
     }
 
-    public void stop() {
-        recorder.stop();
-    }
+//    public void stop() {
+//        recorder.stop();
+//    }
 
 
 
