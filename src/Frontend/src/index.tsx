@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './styles/index.css';
+import './styles/tailwind.css';
 import Home from './components/pages/Home';
 import {BrowserRouter, Route, Routes, useRoutes} from "react-router-dom";
 import {RouteObject, RouterProps} from "react-router";
