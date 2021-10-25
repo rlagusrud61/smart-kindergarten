@@ -12,8 +12,91 @@
         android:layout_height="41dp"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.231" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/rec_5"
+        android:layout_width="117dp"
+        android:layout_height="51dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.894"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.400" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/rec_4"
+        android:layout_width="117dp"
+        android:layout_height="51dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.894"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.500" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/rec_3"
+        android:layout_width="117dp"
+        android:layout_height="51dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.894"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.600" />
+
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/rec_2"
+        android:layout_width="117dp"
+        android:layout_height="51dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.894"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.700" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/rec_1"
+        android:layout_width="117dp"
+        android:layout_height="51dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.894"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.800" />
+
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/rec_0"
+        android:layout_width="117dp"
+        android:layout_height="51dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.894"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.900" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

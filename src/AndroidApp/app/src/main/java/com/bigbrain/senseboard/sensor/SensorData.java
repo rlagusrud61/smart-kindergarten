@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.json.JSONArray;
 
+/**
+ * Class that passes data to realtime activity recognition
+ */
 public class SensorData {
     private List<float[]> data;
 
@@ -16,6 +19,10 @@ public class SensorData {
     public void addRow(float[] row) {
 //        data.add(new JSONArray(Arrays.asList(row)));
         data.add(row);
+    }
+
+    public void storeData(float[] row, String fileName) {
+
     }
 
     public JSONArray getJSON() {

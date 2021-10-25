@@ -1,15 +1,15 @@
 package com.bigbrain.senseboard.sensor;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
-import android.hardware.Sensor;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.bigbrain.senseboard.util.FileUtil;
+import com.bigbrain.senseboard.weka.ClassifiedActivity;
+
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Sets up a given set of sensors and polls their readings at a given frequency
@@ -18,6 +18,12 @@ public class SensorTracker extends Thread {
     private SensorHandler[] sensorHandlers;
     private final int pollingDelay;
     private SensorData sensorData;
+    private Context context;
+    private FileUtil fu;
+
+    private AtomicBoolean record = new AtomicBoolean(false);
+
+
 
     /**
      * Constructor for the SensorHandler class
@@ -27,12 +33,31 @@ public class SensorTracker extends Thread {
      * @param sensorTypes array of sensorTypes, e.g. Sensor.TYPE_ACCELEROMETER
      */
     public SensorTracker(Context context, int pollingDelay, int delay, int... sensorTypes) {
+        this.context = context;
         this.pollingDelay = pollingDelay;
         sensorHandlers = new SensorHandler[sensorTypes.length];
         for (int i = 0; i < sensorHandlers.length; i++) {
             sensorHandlers[i] = new SensorHandler(context, sensorTypes[i], delay);
         }
         sensorData = new SensorData();
+    }
+
+
+    /**
+     * Start recording sensor data to a file in the
+     */
+    public void stopRecord () {
+        this.record.set(false);
+        fu.close();
+    }
+
+
+
+    public void startRecord(int activity) {
+        fu = new FileUtil(this.context);
+        fu.setFileName("Activity_" + ClassifiedActivity.getActivityName(activity));
+        fu.setup();
+        this.record.set(true);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -47,6 +72,10 @@ public class SensorTracker extends Thread {
                     res = concatFloatArrays(res, sensorHandler.getLastSensorEvent().values);
                 }
                 this.sensorData.addRow(res);
+                if (record.get()) {
+                    System.out.println("Recording to " + context.getFilesDir() + "/" + fu.getFileName());
+                    fu.writeData(res);
+                }
             }
 
             try {
