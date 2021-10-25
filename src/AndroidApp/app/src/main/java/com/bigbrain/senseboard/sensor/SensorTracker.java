@@ -57,7 +57,7 @@ public class SensorTracker extends Thread {
 
     public void startRecord(int activity) {
         fu = new FileUtil(this.context);
-        fu.setFileName("Activity_" + ClassifiedActivity.getActivityName(activity));
+        fu.setFileName("Activity_" + ClassifiedActivity.getActivityName(activity) + ".csv");
         fu.setup();
         this.record.set(true);
     }
