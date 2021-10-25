@@ -20,6 +20,7 @@ public class SensorTracker extends Thread {
     private SensorData sensorData;
     private Context context;
     private FileUtil fu;
+    private AudioListener audioListener;
 
     private AtomicBoolean record = new AtomicBoolean(false);
 
@@ -32,8 +33,9 @@ public class SensorTracker extends Thread {
      * @param pollingDelay polling rate of this class on all sensors
      * @param sensorTypes array of sensorTypes, e.g. Sensor.TYPE_ACCELEROMETER
      */
-    public SensorTracker(Context context, int pollingDelay, int delay, int... sensorTypes) {
+    public SensorTracker(Context context, AudioListener al, int pollingDelay, int delay, int... sensorTypes) {
         this.context = context;
+        this.audioListener = al;
         this.pollingDelay = pollingDelay;
         sensorHandlers = new SensorHandler[sensorTypes.length];
         for (int i = 0; i < sensorHandlers.length; i++) {
@@ -71,7 +73,9 @@ public class SensorTracker extends Thread {
                 for (SensorHandler sensorHandler : sensorHandlers) {
                     res = concatFloatArrays(res, sensorHandler.getLastSensorEvent().values);
                 }
+                res = concatFloatArrays(res, new float[]{audioListener.getAverageVolume()});
                 this.sensorData.addRow(res);
+
                 if (record.get()) {
                     System.out.println("Recording to " + context.getFilesDir() + "/" + fu.getFileName());
                     fu.writeData(res);

@@ -34,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
     private SensorTracker st;
     private AudioListener al;
-    private FileUtil fi;
-
 
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
@@ -52,9 +50,15 @@ public class MainActivity extends AppCompatActivity {
         TextView pairingCode = findViewById(R.id.pairingCode);
         pairingCode.setText(apiCode);
 
+        // Set up audio listener
+
+        al = new AudioListener(this);
+
+        al.startAudioRec();
+
         // Set up and start sensor tracker with given sensors
 
-        st = new SensorTracker(this, 20,
+        st = new SensorTracker(this, al, 20,
                 SensorManager.SENSOR_DELAY_FASTEST,   // Delay for all sensors
                 Sensor.TYPE_ACCELEROMETER,            // Sensor 0
                 Sensor.TYPE_GYROSCOPE,                // Sensor 1
@@ -88,15 +92,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        // Set up audio listener
 
-        al = new AudioListener(this);
 
-        al.start();
-
-        // Set up file utility
-
-        fi = new FileUtil(this);
 
     }
 
@@ -109,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         switch(requestCode) {
             case PERMISSIONS_RECORD_AUDIO:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    al.start();
+//                    al.start();
                 } else {
                     this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
                             , PERMISSIONS_RECORD_AUDIO);

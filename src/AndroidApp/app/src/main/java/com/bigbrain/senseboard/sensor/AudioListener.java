@@ -19,7 +19,7 @@ import com.bigbrain.senseboard.MainActivity;
 
 import java.util.Arrays;
 
-public class AudioListener extends Thread {
+public class AudioListener {
     private static final int PERMISSIONS_RECORD_AUDIO = 98;
     private MainActivity context;
 
@@ -33,34 +33,30 @@ public class AudioListener extends Thread {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public AudioListener(MainActivity context) {
         this.context = context;
         bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNELS, ENCODING);
         System.out.println(bufferSize);
 
-    }
-
-    @Override
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public void run() {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
 
             context.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
-            , PERMISSIONS_RECORD_AUDIO);
-            return;
+                    , PERMISSIONS_RECORD_AUDIO);
         }
-
-
-        recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
+        this.recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 SAMPLE_RATE, CHANNELS, ENCODING, BUFFER_CONSTANT);
-        recorder.startRecording();
-        short[] buffer = new short[bufferSize];
-//        while (true) {
-//            recorder.read(buffer, 0, bufferSize, AudioRecord.READ_BLOCKING);
-//            System.out.println(Arrays.toString(buffer));
-//        }
     }
+
+    public void startAudioRec() {
+        recorder.startRecording();
+    }
+
+    public void stopAudioRec() {
+        recorder.stop();
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public float getAverageVolume(){
@@ -76,12 +72,8 @@ public class AudioListener extends Thread {
 
     public float getAverageFrequency(){ // TODO: implement FFT
 
-
         return -1;
     }
-//    public void stop() {
-//        recorder.stop();
-//    }
 
 
 
