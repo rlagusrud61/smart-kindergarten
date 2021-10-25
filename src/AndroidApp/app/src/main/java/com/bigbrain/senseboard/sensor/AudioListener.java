@@ -61,12 +61,13 @@ public class AudioListener {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public float getAverageVolume(){
         short[] buffer = new short[bufferSize];
-        recorder.read(buffer,0, bufferSize, AudioRecord.READ_BLOCKING);
+        recorder.read(buffer,0, bufferSize, AudioRecord.READ_NON_BLOCKING);
 
         int sum = 0;
         for(short i : buffer){
             sum += Math.abs(i);
         }
+        System.out.println(bufferSize);
         return (float)sum/bufferSize;
     }
 

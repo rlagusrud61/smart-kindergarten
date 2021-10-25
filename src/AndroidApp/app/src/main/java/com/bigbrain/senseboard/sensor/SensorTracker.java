@@ -77,13 +77,14 @@ public class SensorTracker extends Thread {
                 this.sensorData.addRow(res);
 
                 if (record.get()) {
-                    System.out.println("Recording to " + context.getFilesDir() + "/" + fu.getFileName());
+//                    System.out.println("Recording to " + context.getFilesDir() + "/" + fu.getFileName());
                     fu.writeData(res);
                 }
             }
 
             try {
-                sleep(this.pollingDelay - time % this.pollingDelay);
+                System.out.println(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
+                sleep(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
             } catch(InterruptedException e) {
                 e.printStackTrace();
             }
