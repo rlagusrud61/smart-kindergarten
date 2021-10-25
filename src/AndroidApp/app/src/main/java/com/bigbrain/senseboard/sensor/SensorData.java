@@ -17,7 +17,6 @@ public class SensorData {
     }
 
     public void addRow(float[] row) {
-//        data.add(new JSONArray(Arrays.asList(row)));
         data.add(row);
     }
 

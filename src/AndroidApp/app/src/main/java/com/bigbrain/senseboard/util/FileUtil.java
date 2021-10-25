@@ -25,7 +25,7 @@ public class FileUtil {
 
     public void setup() {
         try {
-            this.fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            this.fos = context.openFileOutput(fileName, Context.MODE_APPEND);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
