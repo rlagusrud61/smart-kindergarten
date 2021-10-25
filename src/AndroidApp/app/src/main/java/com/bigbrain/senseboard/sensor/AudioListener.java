@@ -36,6 +36,7 @@ public class AudioListener extends Thread {
     public AudioListener(MainActivity context) {
         this.context = context;
         bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNELS, ENCODING);
+        System.out.println(bufferSize);
 
     }
 
@@ -45,7 +46,7 @@ public class AudioListener extends Thread {
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            context.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
+            context.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
             , PERMISSIONS_RECORD_AUDIO);
             return;
         }
@@ -55,12 +56,29 @@ public class AudioListener extends Thread {
                 SAMPLE_RATE, CHANNELS, ENCODING, BUFFER_CONSTANT);
         recorder.startRecording();
         short[] buffer = new short[bufferSize];
-        while (true) {
-            recorder.read(buffer, 0, bufferSize, AudioRecord.READ_BLOCKING);
-            System.out.println(Arrays.toString(buffer));
-        }
+//        while (true) {
+//            recorder.read(buffer, 0, bufferSize, AudioRecord.READ_BLOCKING);
+//            System.out.println(Arrays.toString(buffer));
+//        }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public float getAverageVolume(){
+        short[] buffer = new short[bufferSize];
+        recorder.read(buffer,0, bufferSize, AudioRecord.READ_BLOCKING);
+
+        int sum = 0;
+        for(short i : buffer){
+            sum += Math.abs(i);
+        }
+        return (float)sum/bufferSize;
+    }
+
+    public float getAverageFrequency(){ // TODO: implement FFT
+
+
+        return -1;
+    }
 //    public void stop() {
 //        recorder.stop();
 //    }
