@@ -37,7 +37,7 @@ public class AudioListener {
     public AudioListener(MainActivity context) {
         this.context = context;
         bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNELS, ENCODING);
-        System.out.println(bufferSize);
+        System.out.println("audioBuffer" + bufferSize);
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -67,7 +67,6 @@ public class AudioListener {
         for(short i : buffer){
             sum += Math.abs(i);
         }
-        System.out.println(bufferSize);
         return (float)sum/bufferSize;
     }
 
