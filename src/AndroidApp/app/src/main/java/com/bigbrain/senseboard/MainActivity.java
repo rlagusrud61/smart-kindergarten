@@ -7,37 +7,41 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.bigbrain.senseboard.sensor.AudioListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
-import com.bigbrain.senseboard.util.FileUtil;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
 import com.bigbrain.senseboard.weka.ClassifiedActivity;
+import com.bigbrain.senseboard.weka.ClassifyActivity;
 
 import org.apache.commons.lang3.RandomStringUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_RECORD_AUDIO = 98;
+
     private final String apiCode;
 
     private SensorTracker st;
     private AudioListener al;
 
+    //for classifier
+    private static InputStream str;
+
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -91,10 +95,6 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-
-
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -116,5 +116,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
+    //for classifier - not sure if it's the right way, or if it even works, but I can't use "getAssets"
+    //in a class that isn't an Activity
+    public void getTheAssets() {
+        AssetManager assetManager = getAssets();
+        try {
+            str = assetManager.open("randomForestRightPocket.model");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static InputStream getStr() {
+        return str;
+    }
 }
