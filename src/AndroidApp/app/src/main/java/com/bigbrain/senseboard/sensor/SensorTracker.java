@@ -83,7 +83,6 @@ public class SensorTracker extends Thread {
             }
 
             try {
-                System.out.println(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
                 sleep(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
             } catch(InterruptedException e) {
                 e.printStackTrace();

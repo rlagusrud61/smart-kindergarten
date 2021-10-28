@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.bigbrain.senseboard.sensor.AudioListener;
+import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
 import com.bigbrain.senseboard.weka.ClassifiedActivity;
@@ -23,11 +24,13 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PERMISSIONS_RECORD_AUDIO = 98;
+//    private static final int PERMISSIONS_RECORD_AUDIO = 98;
+//    private static final int PERMISSIONS_BLUETOOTH = 99;
     private final String apiCode;
 
     private SensorTracker st;
     private AudioListener al;
+    private BluetoothListener bl;
 
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
@@ -100,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+        // Set up Bluetooth listener
+
+        bl = new BluetoothListener(this);
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -108,15 +114,21 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch(requestCode) {
-            case PERMISSIONS_RECORD_AUDIO:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    al.start();
-                } else {
-                    this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-                            , PERMISSIONS_RECORD_AUDIO);
+            case Permissions.PERMISSION_RECORD_AUDIO:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
+                            , Permissions.PERMISSION_RECORD_AUDIO);
+                }
+                break;
+            case Permissions.PERMISSION_BLUETOOTH:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    this.requestPermissions(new String[]{Manifest.permission.BLUETOOTH}
+                            , Permissions.PERMISSION_BLUETOOTH);
                 }
                 break;
 
+            default:
+                throw new IllegalStateException("Unexpected value: " + requestCode);
         }
     }
 
