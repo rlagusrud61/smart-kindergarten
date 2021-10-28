@@ -11,16 +11,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.bigbrain.senseboard.sensor.AudioListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
-import com.bigbrain.senseboard.util.FileUtil;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
 import com.bigbrain.senseboard.weka.ClassifiedActivity;
 
@@ -52,12 +46,26 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up audio listener
 
-        al = new AudioListener(this);
-
-        al.startAudioRec();
+        setupAudioListener();
 
         // Set up and start sensor tracker with given sensors
 
+        setupSensorTracker();
+
+        // Set up switches
+
+        setupSwitches();
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setupAudioListener() {
+        al = new AudioListener(this);
+
+        al.startAudioRec();
+    }
+
+    private void setupSensorTracker() {
         st = new SensorTracker(this, al, 20,
                 SensorManager.SENSOR_DELAY_FASTEST,   // Delay for all sensors
                 Sensor.TYPE_ACCELEROMETER,            // Sensor 0
@@ -65,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
                 Sensor.TYPE_MAGNETIC_FIELD);          // Sensor 2
 
         st.start();
+    }
 
-        // Set up switches
-
+    private void setupSwitches() {
         SwitchCompat rec_0 = findViewById(R.id.rec_0);
         SwitchCompat rec_1 = findViewById(R.id.rec_1);
         SwitchCompat rec_2 = findViewById(R.id.rec_2);
@@ -90,12 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-
-
-
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
