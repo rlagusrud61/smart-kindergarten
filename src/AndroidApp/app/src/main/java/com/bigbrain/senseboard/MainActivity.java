@@ -50,9 +50,15 @@ public class MainActivity extends AppCompatActivity {
         TextView pairingCode = findViewById(R.id.pairingCode);
         pairingCode.setText(apiCode);
 
-        // Set up audio listener
+        // Start permission chain
 
-        setupAudioListener();
+        this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
+            , Permissions.PERMISSION_RECORD_AUDIO);
+
+
+//        // Set up Bluetooth listener
+//
+//        setupBluetoothListener();
 
         // Set up and start sensor tracker with given sensors
 
@@ -62,9 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         setupSwitches();
 
-        // Set up Bluetooth listener
-
-        setupBluetoothListener();
 
         //Set up Audio handler
 
@@ -72,18 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void setupAudioListener() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-            this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
-                    , Permissions.PERMISSION_RECORD_AUDIO);
-            return;
-        }
-        setupAudio();
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupAudio() {
@@ -134,23 +125,10 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupBluetoothListener() {
+        bl = new BluetoothListener(this, 12000);
 
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-//                    , Permissions.PERMISSION_ACCESS_FINE_LOCATION);
-//        }
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-//                != PackageManager.PERMISSION_GRANTED) {
-//            this.requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}
-//                    , Permissions.PERMISSION_ACCESS_BACKGROUND_LOCATION);
-//        }
-
-        bl = new BluetoothListener(this);
-
-        bl.startDiscovery();
+        bl.start();
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -161,25 +139,27 @@ public class MainActivity extends AppCompatActivity {
 
         switch (requestCode) {
             case Permissions.PERMISSION_RECORD_AUDIO:
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
-                            , Permissions.PERMISSION_RECORD_AUDIO);
-                } else {
-                    setupAudio();
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
+                            , Permissions.PERMISSION_ACCESS_FINE_LOCATION);
                 }
                 break;
-//            case Permissions.PERMISSION_ACCESS_FINE_LOCATION:
-//                if (grantResults.length != 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-//                    this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-//                            , Permissions.PERMISSION_ACCESS_FINE_LOCATION);
-//                }
-//                break;
-//            case Permissions.PERMISSION_ACCESS_BACKGROUND_LOCATION:
-//                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-//                    this.requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}
-//                            , Permissions.PERMISSION_ACCESS_BACKGROUND_LOCATION);
-//                }
-//                break;
+            case Permissions.PERMISSION_ACCESS_FINE_LOCATION:
+                if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}
+                            , Permissions.PERMISSION_ACCESS_BACKGROUND_LOCATION);
+                }
+                break;
+            case Permissions.PERMISSION_ACCESS_BACKGROUND_LOCATION:
+                if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // All permissions given! Run dependent methods...
+
+                    setupAudio();
+
+                    setupBluetoothListener();
+
+                }
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + requestCode);
         }

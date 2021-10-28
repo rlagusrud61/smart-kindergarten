@@ -6,7 +6,13 @@ public enum Activities {
     RUNNING("Running"),
     PLAYING("Playing"),
     FIGHTING("Fighting"),
-    FALLING("Falling");
+    FALLING("Falling"),
+
+    TALKING("Talking"),
+    SHOUTING("Shouting"),
+    CRYING("Crying"),
+    SILENT("Silent"),
+    LAUGHING("Laughing");
 
     public final String label;
 
