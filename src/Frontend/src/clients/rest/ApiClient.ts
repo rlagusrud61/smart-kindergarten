@@ -23,7 +23,7 @@ export class ClassroomClient extends ClientBase {
     /**
      * @return Success
      */
-    classroom(): Promise<number[]> {
+    classroom(): Promise<string[]> {
         let url_ = this.baseUrl + "/api/Classroom";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -39,13 +39,13 @@ export class ClassroomClient extends ClientBase {
         });
     }
 
-    protected processClassroom(response: Response): Promise<number[]> {
+    protected processClassroom(response: Response): Promise<string[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <number[]>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <string[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -53,8 +53,130 @@ export class ClassroomClient extends ClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<number[]>(<any>null);
+        return Promise.resolve<string[]>(<any>null);
     }
+}
+
+export class StudentsClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    /**
+     * @return Success
+     */
+    students(): Promise<Student[]> {
+        let url_ = this.baseUrl + "/api/Students";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processStudents(_response);
+        });
+    }
+
+    protected processStudents(response: Response): Promise<Student[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <Student[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Student[]>(<any>null);
+    }
+}
+
+export class StudentUploadClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    /**
+     * @param ownMac (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    studentUpload(ownMac?: string | undefined, body?: NearbyBluetooth[] | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/StudentUpload?";
+        if (ownMac === null)
+            throw new Error("The parameter 'ownMac' cannot be null.");
+        else if (ownMac !== undefined)
+            url_ += "ownMac=" + encodeURIComponent("" + ownMac) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processStudentUpload(_response);
+        });
+    }
+
+    protected processStudentUpload(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+}
+
+export interface NearbyBluetooth {
+    hardwareAddress?: string | undefined;
+    rssi?: number;
+}
+
+export interface Student {
+    id?: string;
+    deviceHardwareAddress?: string | undefined;
+    name?: string | undefined;
+    teachers?: Teacher[] | undefined;
+}
+
+export interface Teacher {
+    id?: string;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    students?: Student[] | undefined;
 }
 
 export class ApiException extends Error {
