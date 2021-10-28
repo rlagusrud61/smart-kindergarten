@@ -1,14 +1,14 @@
 import { SearchBar } from "./SearchBar";
 import { useState } from "react";
+import {Student} from "../../clients/rest/ApiClient";
 
 interface StudentListProps {
-    students: string[],
+    students: Student[],
     setSelectedStudent: any,
 }
 
 export const StudentList = ({students, setSelectedStudent}:StudentListProps) => {
     const [searchQuery, setSearchQuery] = useState("");
-    
 
     return (
         <div className="overflow-auto h-full px-5">
@@ -19,16 +19,14 @@ export const StudentList = ({students, setSelectedStudent}:StudentListProps) => 
             <div className="bg-white shadow-lg rounded-xl">
                 {students
                     .filter((student) => {
-                        if (student.toLowerCase().includes(searchQuery.toLowerCase()) || searchQuery == "") {
-                            return true;
-                        } return false;
+                        return student.name?.toLowerCase().includes(searchQuery.toLowerCase()) || searchQuery === "";
                     })
-                    .map((student, id) => {
+                    .map((student) => {
                         return (
-                            <button onClick={() => {setSelectedStudent(id)}} key={id} className="p-3 grid grid-cols-3">
+                            <button onClick={() => {setSelectedStudent(student)}} key={student.id} className="p-3 grid grid-cols-3">
                                 <img className="col-span-1 object-contain transform w-16 rounded-full" alt='kid' src="img/kidlmao.jpg" />
-                                <div className="table align-middle row-span-2 col-span-2">
-                                    <h1 className="table-cell align-middle text-justify text-lg">{student}</h1>
+                                <div className="flex justify-center align-middle col-span-2">
+                                    <h1 className="align-middle text-center text-lg">{student.name}</h1>
                                 </div>
                             </button>
                         );
