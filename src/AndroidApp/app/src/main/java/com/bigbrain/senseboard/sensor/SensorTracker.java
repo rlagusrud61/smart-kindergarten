@@ -6,7 +6,7 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.bigbrain.senseboard.util.FileUtil;
-import com.bigbrain.senseboard.weka.ClassifiedActivity;
+import com.bigbrain.senseboard.weka.Activities;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -57,7 +57,7 @@ public class SensorTracker extends Thread {
 
     public void startRecord(int activity) {
         fu = new FileUtil(this.context);
-        fu.setFileName("Activity_" + ClassifiedActivity.getActivityName(activity) + ".csv");
+        fu.setFileName("Activity_" + Activities.values()[activity].label + ".csv");
         fu.setup();
         this.record.set(true);
     }
@@ -83,7 +83,6 @@ public class SensorTracker extends Thread {
             }
 
             try {
-                System.out.println(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
                 sleep(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
             } catch(InterruptedException e) {
                 e.printStackTrace();

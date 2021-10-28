@@ -1,6 +1,7 @@
 package com.bigbrain.senseboard.sensor;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -20,9 +21,7 @@ import com.bigbrain.senseboard.MainActivity;
 import java.util.Arrays;
 
 public class AudioListener {
-    private static final int PERMISSIONS_RECORD_AUDIO = 98;
     private MainActivity context;
-
     private AudioRecord recorder;
     private int bufferSize;
     private static final int SAMPLE_RATE = 8000;
@@ -33,18 +32,13 @@ public class AudioListener {
 
 
 
+    @SuppressLint("MissingPermission")
     @RequiresApi(api = Build.VERSION_CODES.M)
     public AudioListener(MainActivity context) {
         this.context = context;
         bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNELS, ENCODING);
         System.out.println("audioBuffer" + bufferSize);
 
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            context.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
-                    , PERMISSIONS_RECORD_AUDIO);
-        }
         this.recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
                 SAMPLE_RATE, CHANNELS, ENCODING, BUFFER_CONSTANT);
     }

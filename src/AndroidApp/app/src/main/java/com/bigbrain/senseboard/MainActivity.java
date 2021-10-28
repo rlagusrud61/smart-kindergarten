@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -11,29 +12,28 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
+import com.bigbrain.senseboard.sensor.AudioHandler;
 import com.bigbrain.senseboard.sensor.AudioListener;
+import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
-import com.bigbrain.senseboard.util.FileUtil;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
-import com.bigbrain.senseboard.weka.ClassifiedActivity;
+import com.bigbrain.senseboard.weka.Activities;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PERMISSIONS_RECORD_AUDIO = 98;
+//    private static final int PERMISSIONS_RECORD_AUDIO = 98;
+//    private static final int PERMISSIONS_BLUETOOTH = 99;
     private final String apiCode;
 
     private SensorTracker st;
     private AudioListener al;
+    private BluetoothListener bl;
+    private AudioHandler ah;
 
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
@@ -50,14 +50,41 @@ public class MainActivity extends AppCompatActivity {
         TextView pairingCode = findViewById(R.id.pairingCode);
         pairingCode.setText(apiCode);
 
-        // Set up audio listener
+        // Start permission chain
 
-        al = new AudioListener(this);
+        this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
+            , Permissions.PERMISSION_RECORD_AUDIO);
 
-        al.startAudioRec();
+
+//        // Set up Bluetooth listener
+//
+//        setupBluetoothListener();
 
         // Set up and start sensor tracker with given sensors
 
+        setupSensorTracker();
+
+        // Set up switches
+
+        setupSwitches();
+
+
+        //Set up Audio handler
+
+        setupAudioHandler();
+
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setupAudio() {
+        al = new AudioListener(this);
+
+        al.startAudioRec();
+    }
+
+
+    private void setupSensorTracker() {
         st = new SensorTracker(this, al, 20,
                 SensorManager.SENSOR_DELAY_FASTEST,   // Delay for all sensors
                 Sensor.TYPE_ACCELEROMETER,            // Sensor 0
@@ -65,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
                 Sensor.TYPE_MAGNETIC_FIELD);          // Sensor 2
 
         st.start();
+    }
 
-        // Set up switches
-
+    private void setupSwitches() {
         SwitchCompat rec_0 = findViewById(R.id.rec_0);
         SwitchCompat rec_1 = findViewById(R.id.rec_1);
         SwitchCompat rec_2 = findViewById(R.id.rec_2);
@@ -78,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         SensorSwitchHandler ssh = new SensorSwitchHandler(this, switches);
 
         for (int i = 0; i < switches.length; i++) {
-            String text = "Record " + ClassifiedActivity.getActivityName(i);
+            String text = "Record " + Activities.values()[i];
             switches[i].setText(text);
             int finalI = i;
             switches[i].setOnCheckedChangeListener((compoundButton, b) -> {
@@ -90,12 +117,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-
-
-
-
     }
+
+    void setupAudioHandler(){
+        ah = new AudioHandler(250);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setupBluetoothListener() {
+        bl = new BluetoothListener(this, 12000);
+
+        bl.start();
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -103,18 +137,38 @@ public class MainActivity extends AppCompatActivity {
             , @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch(requestCode) {
-            case PERMISSIONS_RECORD_AUDIO:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    al.start();
-                } else {
+        switch (requestCode) {
+            case Permissions.PERMISSION_RECORD_AUDIO:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-                            , PERMISSIONS_RECORD_AUDIO);
+                            , Permissions.PERMISSION_ACCESS_FINE_LOCATION);
                 }
                 break;
+            case Permissions.PERMISSION_ACCESS_FINE_LOCATION:
+                if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    this.requestPermissions(new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}
+                            , Permissions.PERMISSION_ACCESS_BACKGROUND_LOCATION);
+                }
+                break;
+            case Permissions.PERMISSION_ACCESS_BACKGROUND_LOCATION:
+                if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // All permissions given! Run dependent methods...
 
+                    setupAudio();
+
+                    setupBluetoothListener();
+
+                }
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + requestCode);
         }
+
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bl.destroy();
+    }
 }

@@ -18,7 +18,7 @@ public class SensorData {
 
     public void addRow(float[] row) {
         data.add(row);
-    }
+        }
 
     public void storeData(float[] row, String fileName) {
 
