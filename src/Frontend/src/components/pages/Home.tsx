@@ -1,9 +1,8 @@
 import {useEffect, useState} from 'react';
-import logo from '../../img/logo.svg';
 import '../../styles/tailwind.css'
-import {ClassroomClient, Student, StudentsClient} from "../../clients/rest/ApiClient";
-import {StudentProfile} from './../layout/StudentProfile';
-import {StudentList} from './../layout/StudentList';
+import {Student, StudentsClient} from "../../clients/rest/ApiClient";
+import {StudentProfile} from '../layout/StudentProfile';
+import {StudentList} from '../layout/StudentList';
 
 function Home() {
 
