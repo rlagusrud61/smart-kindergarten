@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 //                    , Permissions.PERMISSION_ACCESS_BACKGROUND_LOCATION);
 //        }
 
-        bl = new BluetoothListener(this);
+    bl = new BluetoothListener(this);
 
         bl.startDiscovery();
     }
@@ -181,4 +181,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         bl.destroy();
     }
+
+
 }

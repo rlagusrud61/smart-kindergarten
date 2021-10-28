@@ -5,8 +5,10 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.bigbrain.senseboard.MainActivity;
 import com.bigbrain.senseboard.util.FileUtil;
 import com.bigbrain.senseboard.weka.Activities;
+import com.bigbrain.senseboard.weka.ClassifyActivity;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,6 +23,7 @@ public class SensorTracker extends Thread {
     private Context context;
     private FileUtil fu;
     private AudioListener audioListener;
+    private ClassifyActivity cla;
 
     private AtomicBoolean record = new AtomicBoolean(false);
 
@@ -42,6 +45,7 @@ public class SensorTracker extends Thread {
             sensorHandlers[i] = new SensorHandler(context, sensorTypes[i], delay);
         }
         sensorData = new SensorData();
+        cla = new ClassifyActivity((MainActivity) context);
     }
 
 
@@ -75,6 +79,7 @@ public class SensorTracker extends Thread {
                 }
 //                res = concatFloatArrays(res, new float[]{audioListener.getAverageVolume()});
                 this.sensorData.addRow(res);
+                cla.putValues(res);
 
                 if (record.get()) {
 //                    System.out.println("Recording to " + context.getFilesDir() + "/" + fu.getFileName());
