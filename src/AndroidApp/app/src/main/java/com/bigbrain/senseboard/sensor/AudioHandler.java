@@ -14,15 +14,12 @@ public class AudioHandler {
     private Classifier classifier;
 
     //ToDo use weka.Activites enum class for this
-    private final String[] sounds = {"TALKING", "SHOUTING", "CRYING", "SILENT", "LAUGHING"};
-    public final int TALKING = 0;
-    public final int SHOUTING = 0;
-    public final int CRYING = 0;
-    public final int SILENT = 0;
-    public final int LAUGHING = 0;
+
+
+    private final String[] sounds = {"crying", "laughing", "shouting", "talking", "silent"};
 
     private int bufferSize;
-    private String classifierPath = "Bruh.model";
+    private String classifierPath = "bruh.model";
 
     public AudioHandler(int buffer){
         bufferSize = buffer;
@@ -36,7 +33,7 @@ public class AudioHandler {
         for(int i=0; i<sounds.length; i++){
             soundList.add(sounds[i]);
         }
-        attributes.add(new Attribute("Sounds", soundList));
+        attributes.add(new Attribute(Integer.toString(bufferSize+1), soundList));
 
         instances = new Instances("Bruh", attributes, 1);
 
