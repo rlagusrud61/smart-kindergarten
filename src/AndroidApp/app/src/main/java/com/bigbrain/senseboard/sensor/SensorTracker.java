@@ -2,7 +2,6 @@ package com.bigbrain.senseboard.sensor;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -74,7 +73,7 @@ public class SensorTracker extends Thread {
                 for (SensorHandler sensorHandler : sensorHandlers) {
                     res = concatFloatArrays(res, sensorHandler.getLastSensorEvent().values);
                 }
-                //res = concatFloatArrays(res, new float[]{audioListener.getAverageVolume()});
+//                res = concatFloatArrays(res, new float[]{audioListener.getAverageVolume()});
                 this.sensorData.addRow(res);
 
                 if (record.get()) {
@@ -84,7 +83,6 @@ public class SensorTracker extends Thread {
             }
 
             try {
-                System.out.println(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
                 sleep(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
             } catch(InterruptedException e) {
                 e.printStackTrace();

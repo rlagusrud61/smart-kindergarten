@@ -7,7 +7,6 @@ import androidx.appcompat.widget.SwitchCompat;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.content.res.AssetManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
@@ -15,33 +14,27 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.bigbrain.senseboard.sensor.AudioListener;
+import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
 import com.bigbrain.senseboard.weka.ClassifiedActivity;
-import com.bigbrain.senseboard.weka.ClassifyActivity;
 
 import org.apache.commons.lang3.RandomStringUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int PERMISSIONS_RECORD_AUDIO = 98;
-
+//    private static final int PERMISSIONS_RECORD_AUDIO = 98;
+//    private static final int PERMISSIONS_BLUETOOTH = 99;
     private final String apiCode;
 
     private SensorTracker st;
     private AudioListener al;
-
-    //for classifier
-    private static InputStream str;
+    private BluetoothListener bl;
 
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -56,12 +49,26 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up audio listener
 
-        al = new AudioListener(this);
-
-        al.startAudioRec();
+        setupAudioListener();
 
         // Set up and start sensor tracker with given sensors
 
+        setupSensorTracker();
+
+        // Set up switches
+
+        setupSwitches();
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void setupAudioListener() {
+        al = new AudioListener(this);
+
+        al.startAudioRec();
+    }
+
+    private void setupSensorTracker() {
         st = new SensorTracker(this, al, 20,
                 SensorManager.SENSOR_DELAY_FASTEST,   // Delay for all sensors
                 Sensor.TYPE_ACCELEROMETER,            // Sensor 0
@@ -69,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
                 Sensor.TYPE_MAGNETIC_FIELD);          // Sensor 2
 
         st.start();
+    }
 
-        // Set up switches
-
+    private void setupSwitches() {
         SwitchCompat rec_0 = findViewById(R.id.rec_0);
         SwitchCompat rec_1 = findViewById(R.id.rec_1);
         SwitchCompat rec_2 = findViewById(R.id.rec_2);
@@ -94,8 +101,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
+
+        // Set up Bluetooth listener
+
+        bl = new BluetoothListener(this);
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -104,29 +114,23 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch(requestCode) {
-            case PERMISSIONS_RECORD_AUDIO:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    al.start();
-                } else {
-                    this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}
-                            , PERMISSIONS_RECORD_AUDIO);
+            case Permissions.PERMISSION_RECORD_AUDIO:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
+                            , Permissions.PERMISSION_RECORD_AUDIO);
+                }
+                break;
+            case Permissions.PERMISSION_BLUETOOTH:
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    this.requestPermissions(new String[]{Manifest.permission.BLUETOOTH}
+                            , Permissions.PERMISSION_BLUETOOTH);
                 }
                 break;
 
+            default:
+                throw new IllegalStateException("Unexpected value: " + requestCode);
         }
     }
 
-    //for classifier - not sure if it's the right way, or if it even works, but I can't use "getAssets"
-    //in a class that isn't an Activity
-    public void getTheAssets() {
-        AssetManager assetManager = getAssets();
-        try {
-            str = assetManager.open("randomForestRightPocket.model");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static InputStream getStr() {
-        return str;
-    }
+
 }
