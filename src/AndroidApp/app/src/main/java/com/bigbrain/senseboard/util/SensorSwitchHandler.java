@@ -22,6 +22,10 @@ public class SensorSwitchHandler {
     }
 
 
+    /**
+     * Deactivate all switches except for one
+     * @param s SwitchCompat that is to be the only active one
+     */
     public void deactivateOthers(SwitchCompat s) {
         this.active = s;
         for (SwitchCompat s_o : switches) {

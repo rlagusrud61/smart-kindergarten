@@ -50,15 +50,11 @@ public class MainActivity extends AppCompatActivity {
         TextView pairingCode = findViewById(R.id.pairingCode);
         pairingCode.setText(apiCode);
 
-        // Start permission chain
+        // Start permission request chain (handled by onRequestPermissionsResult)
 
         this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
             , Permissions.PERMISSION_RECORD_AUDIO);
 
-
-//        // Set up Bluetooth listener
-//
-//        setupBluetoothListener();
 
         // Set up and start sensor tracker with given sensors
 
@@ -125,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupBluetoothListener() {
-        bl = new BluetoothListener(this, 12000);
+        bl = new BluetoothListener(this, 60000);
 
         bl.start();
     }
@@ -169,6 +165,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        bl.destroy();
+        bl.unregister();
     }
 }

@@ -23,7 +23,10 @@ public class SensorHandler implements SensorEventListener {
         sensorManager.registerListener(this, sensor, delay);
     }
 
-
+    /**
+     * Update this class' sensorEvent object to the latest measurement
+     * @param sensorEvent latest sensor measurement
+     */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         this.lastSensorEvent = sensorEvent;
