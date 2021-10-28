@@ -29,7 +29,7 @@ public class ClassifyActivity {
     private final String[] activity = {"Falling", "Running","Sitting", "Playing", "Fighting", "Walking"};
     Instances instances;
     Instance instance;
-    HashMap<Integer,Integer> readings;
+    HashMap<Integer,Integer> readings = new HashMap<>();
     private final double[] activityWeights = {1, 1, 1, 1, 1, 1};
     String current_state;
 
@@ -41,22 +41,25 @@ public class ClassifyActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        initiateReadings();
+        for (int i = 0; i < 6; i++) {
+            this.readings.put(i, 0);
+        }
+        //System.out.println(readings);
     }
 
-    public void initiateReadings(){
-        System.out.println("initiate readings method called");
-        if (running) {
-            this.readings = new HashMap<>();
-            for (int i = 0; i < 6; i++) {
-                this.readings.put(i, 0);
-            }
-        }
-        System.out.println(readings); //readings is created
-    }
+//    public void initiateReadings(){
+//        System.out.println("initiate readings method called");
+//        if (running) {
+//            this.readings = new HashMap<>();
+//            for (int i = 0; i < 6; i++) {
+//                this.readings.put(i, 0);
+//            }
+//        }
+//        System.out.println(readings); //readings is created
+//    }
 
     public void activityPredict() {
-        System.out.println("activity predict called");
+        //System.out.println("activity predict called");
         if (cls == null) {
             Log.d(TAG, "classifier is null");
             return;
@@ -87,18 +90,18 @@ public class ClassifyActivity {
 
             // Get the prediction in int
             prediction = (int)cls.classifyInstance(instance);
-            System.out.println( "the prediction is: " + prediction);
-            System.out.println("the predicted activity is " + activity[prediction]);
+            //System.out.println( "the prediction is: " + prediction);
+            //System.out.println("the predicted activity is " + activity[prediction]);
 
             int count = 0;
-            System.out.println("does readings contain the key? " + this.readings.containsKey(prediction));
+            //System.out.println("does readings contain the key? " + this.readings.containsKey(prediction));
             if (this.readings.containsKey(prediction)) {
                 count = this.readings.get(prediction);
-                System.out.println("the count is: " + count);
+                //System.out.println("the count is: " + count);
             }
 
             this.readings.put(prediction, count + 1);
-            System.out.println("readings" + this.readings);
+            //System.out.println("readings" + this.readings);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -154,7 +157,7 @@ public class ClassifyActivity {
         mgf1 =row[6];
         mgf2 =row[7];
         mgf3 =row[8];
-        System.out.println("in put values " + Arrays.toString(row));
+        //System.out.println("in put values " + Arrays.toString(row));
         activityPredict();
         getPredictedActivity();
     }
@@ -162,7 +165,7 @@ public class ClassifyActivity {
 
 
     public int getActivityWithMostOccurrence(){
-        System.out.println("activity with most occurrence called");
+        //System.out.println("activity with most occurrence called");
         // Get the activity with the most occurrence
         double maxPredictionValue = 0;
         double weightedValue;
@@ -175,27 +178,35 @@ public class ClassifyActivity {
                 maxPredictionValue = weightedValue;
                 maxPredictionKey = entry.getKey();
             }
-        }return maxPredictionKey;
+        }
+        System.out.println("Max predicted activity is: " + activity[maxPredictionKey]);
+        //System.out.println("The max prediction key is " + maxPredictionKey);
+        return maxPredictionKey;
     }
 
     public void getPredictedActivity(){
-        System.out.println("get predicted activity is called");
+        //System.out.println("get predicted activity is called");
         int sum = 0;
         for (int v: readings.values()){
             sum += v;
-            System.out.println(sum);
+            //System.out.println(sum);
         }
 
         //Log.d(TAG, "Old activity: " + oldPredictionActivity);
         //if it reaches 150 readings
         if (sum == 150){
-            System.out.println("reached sum == 150");
+            //System.out.println("reached sum == 150");
             int prediction = getActivityWithMostOccurrence();
             current_state = activity[prediction];
+            for (int i = 0; i < 6; i++) {
+                this.readings.put(i, 0);
+            }
+            //System.out.println("new readings =" + readings);
             //Log.d(TAG, current_state);
             }
 
-            readings.clear();
+
+        //System.out.println("readings cleared");
 
         }
 }
