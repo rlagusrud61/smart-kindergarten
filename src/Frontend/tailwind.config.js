@@ -1,11 +1,25 @@
 const colors = require('tailwindcss/colors')
 
 module.exports = {
-  purge: ['.src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    scale: {
+      '25': '.25',
+    },
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
+    container:{
+      padding: '2rem',
+      center:true,
+    },
     colors: {
-      inherit: colors.inherit,
+      // inherit: colors.inherit,
       current: colors.current,
       transparent: colors.transparent,
       black: colors.black,
@@ -52,5 +66,26 @@ module.exports = {
       borderColor: ['focus-visible'],
       opacity: ['disabled'],
     }
-  }
+  },
+
+  gridRow: {
+    auto: 'auto',
+    'span-1': 'span 1 / span 1',
+    'span-2': 'span 2 / span 2',
+    'span-3': 'span 3 / span 3',
+    'span-4': 'span 4 / span 4',
+    'span-5': 'span 5 / span 5',
+    'span-6': 'span 6 / span 6',
+    'span-full': '1 / -1',
+  },
+  gridRowStart: {
+    auto: 'auto',
+    1: '1',
+    2: '2',
+    3: '3',
+    4: '4',
+    5: '5',
+    6: '6',
+    7: '7',
+  },
 }

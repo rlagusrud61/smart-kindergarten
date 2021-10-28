@@ -73,7 +73,7 @@ public class SensorTracker extends Thread {
                 for (SensorHandler sensorHandler : sensorHandlers) {
                     res = concatFloatArrays(res, sensorHandler.getLastSensorEvent().values);
                 }
-                res = concatFloatArrays(res, new float[]{audioListener.getAverageVolume()});
+//                res = concatFloatArrays(res, new float[]{audioListener.getAverageVolume()});
                 this.sensorData.addRow(res);
 
                 if (record.get()) {
