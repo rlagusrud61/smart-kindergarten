@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.bigbrain.senseboard.sensor.AudioHandler;
 import com.bigbrain.senseboard.sensor.AudioListener;
 import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private SensorTracker st;
     private AudioListener al;
     private BluetoothListener bl;
+    private AudioHandler ah;
 
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
@@ -63,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
         // Set up Bluetooth listener
 
         setupBluetoothListener();
+
+        //Set up Audio handler
+
+        setupAudioHandler();
 
     }
 
@@ -120,6 +126,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    void setupAudioHandler(){
+        ah = new AudioHandler(250);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)

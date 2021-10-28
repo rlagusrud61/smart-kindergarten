@@ -23,7 +23,7 @@ public class AudioHandler {
     private int bufferSize;
     private String classifierPath = "Bruh.model";
 
-    public AudioHandler(int buffer, AudioListener mic){
+    public AudioHandler(int buffer){
         bufferSize = buffer;
         ArrayList<Attribute> attributes = new ArrayList<>();
 
