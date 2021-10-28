@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import logo from '../../img/logo.svg';
 import '../../styles/tailwind.css'
 import {ClassroomClient, Student, StudentsClient} from "../../clients/rest/ApiClient";
@@ -35,13 +35,13 @@ function Home() {
                             {selectedStudent && (<StudentProfile student={selectedStudent}/>)}
                         </div>
 
-          </div>
-        </div>
-      </div>
+                    </div>
+                </div>
+            </div>
 
-    </main>
+        </main>
 
-  );
+    );
 }
 
 export default Home;
