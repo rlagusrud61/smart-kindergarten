@@ -13,6 +13,7 @@ public class AudioHandler {
     private Instance instance;
     private Classifier classifier;
 
+    //ToDo use weka.Activites enum class for this
     private final String[] sounds = {"TALKING", "SHOUTING", "CRYING", "SILENT", "LAUGHING"};
     public final int TALKING = 0;
     public final int SHOUTING = 0;
