@@ -35,4 +35,13 @@ export const ProfileDetails = ({student}: StudentProfileProps) => {
         </div>)
 }
 
-export const ImagePathForStudent = (student:Student) : string => student.name === "Michiel" ? "img/michiel.png" : "img/kidlmao.jpg"
+export const ImagePathForStudent = (student:Student) : string => {
+    switch (student.name){
+        case "Michiel":
+            return "img/michiel.png"
+        case "Hyunk":
+            return "img/kim.jpg"
+        default:
+            return "img/kidlmao.jpg";
+    }
+}
