@@ -1,0 +1,73 @@
+$radius-default: 1rem;
+$primary: #606FF9;
+
+@mixin toast{
+  border-radius: $radius-default !important;
+  padding: .5rem 1rem 0 1rem !important;
+
+  h1{
+    font-family: "Poppins", sans-serif !important;
+    font-weight: 500 !important;
+    font-size: .93em;
+
+    display: block;
+    margin-bottom: .2rem;
+  }
+
+  font-family: "Segoe UI", sans-serif !important;
+  font-size: .90em !important;
+
+  color: #f3f3f3;
+
+  p{
+    margin-bottom: 1rem;
+  }
+
+}
+
+.Toastify__toast--dark {
+  background-color: rgba(18, 18, 18, 0.65) !important;
+  @include toast;
+}
+.Toastify__toast--default {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  color: #2d2d2d !important;
+  @include toast;
+}
+.Toastify__toast--info {
+  background-color: rgba(60, 160, 224, 0.5) !important;
+  @include toast;
+}
+.Toastify__toast--success {
+  background-color: rgba(23, 179, 25, 0.45) !important;
+  @include toast;
+}
+
+.Toastify__toast--warning {
+  background-color: rgba(245, 194, 27, 0.55) !important;
+  @include toast;
+}
+.Toastify__toast--error {
+  background-color: rgba(213, 61, 46, 0.5) !important;
+  @include toast;
+}
+.Toastify__toast-body {
+  white-space: pre-line;
+
+  padding-bottom: .1rem !important;
+}
+
+/** Classes for the progress bar **/
+.Toastify__progress-bar {
+}
+.Toastify__progress-bar--animated {
+}
+.Toastify__progress-bar--controlled {
+}
+.Toastify__progress-bar--rtl {
+}
+.Toastify__progress-bar--default {
+}
+.Toastify__progress-bar--dark {
+  background: $primary !important;
+}

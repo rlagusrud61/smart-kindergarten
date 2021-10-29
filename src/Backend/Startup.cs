@@ -1,8 +1,8 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using KindergartenApi.Context;
+using KindergartenApi.Hubs;
 using Microsoft.EntityFrameworkCore;
-using KindergartenApi.Context;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 
 namespace KindergartenApi;
 
@@ -20,30 +20,72 @@ public class Startup
         services.AddDbContext<GartenContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("Postgres")));
 
-        services.AddControllers();
-        services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new() { Title = "KindergartenApi", Version = "v1" }); });
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new()
+            {
+                Title = "KindergartenApi",
+                Version = "v1"
+            });
+            
+            c.DocumentFilter<SwaggerHubTypeFilter>();
+        });
+        
+        // services.AddCors(m =>
+        // {
+        //     m.AddDefaultPolicy(builder =>
+        //     {
+        //         builder.AllowAnyHeader();
+        //         builder.AllowAnyMethod();
+        //         builder.AllowCredentials();
+        //         builder.WithOrigins("http://localhost:3000/","https://localhost:3000","https://ss.mineapple.net");
+        //     });
+        // });
+        
+        services.AddCors(opts =>
+        {
+            opts.AddDefaultPolicy(builder =>
+            {
+                builder.WithOrigins("http://localhost:3000", "https://localhost:3000");
+                builder.AllowAnyMethod();
+                builder.AllowCredentials();
+            });
+        });
+        
+        services.AddControllers()
+            .AddJsonOptions(opts =>
+            {
+                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                opts.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                opts.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
+
+        services.AddSignalR()
+            .AddJsonProtocol(opts =>
+            {
+                opts.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                opts.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                opts.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
+            });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        // if (app.Environment.IsDevelopment())
-// {
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KindergartenApi v1"));
-// }
 
-// app.UseRouting();
-
+        
+        app.UseRouting();
+        
         app.UseCors(m =>
         {
-            // m.WithOrigins("https://admin.mineapple.net", "http://localhost:3001", "https://localhost:3001", "https://192.168.1.2:3001",
-            //     "http://192.168.1.2:3001");
-            m.AllowAnyOrigin();
+            m.WithOrigins("http://localhost:3000","https://localhost:3000","https://ss.mineapple.net");
             m.AllowAnyMethod();
             m.AllowAnyHeader();
+            m.AllowCredentials();
         });
 
-        app.UseRouting();
+
         app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
@@ -52,7 +94,8 @@ public class Startup
                 "default",
                 "api/v{v:apiVersion}/{controller}/{action}/{id?}");
 
-            // endpoints.MapDefaultControllerRoute();
+            endpoints.MapHub<ActivityHub>("/Hubs/Activity");
+            endpoints.MapHub<StudentHub>("/Hubs/Student/{id}");
         });
     }
 }

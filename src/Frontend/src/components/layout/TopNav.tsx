@@ -1,8 +1,5 @@
 import {Link} from "react-router-dom";
-// import "../../styles/_topnav.scss";
-
-import React, {useState} from "react";
-import { OtherPage } from './../pages/OtherPage';
+import React from "react";
 
 export const TopNav = () => {
     return (

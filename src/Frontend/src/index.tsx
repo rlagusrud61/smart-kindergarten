@@ -1,11 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './styles/tailwind.css';
 import Home from './components/pages/Home';
-import {BrowserRouter, Route, Routes, useRoutes} from "react-router-dom";
-import {RouteObject, RouterProps} from "react-router";
+import {BrowserRouter} from "react-router-dom";
+import {RouteObject} from "react-router";
 import {Layout} from "./components/layout/Layout";
 import {OtherPage} from "./components/pages/OtherPage";
+import {ActivityProvider} from "./context/ActivityContext";
+import './styles/tailwind.css';
+import './styles/Kindergarten.scss';
 
 export const MainLayoutRoutes: RouteObject[] = [
     {
@@ -21,7 +23,9 @@ export const MainLayoutRoutes: RouteObject[] = [
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
-            <Layout/>
+            <ActivityProvider>
+                <Layout/>
+            </ActivityProvider>
         </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')

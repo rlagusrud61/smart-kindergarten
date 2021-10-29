@@ -1,10 +1,18 @@
 import * as React from 'react';
-import { Suspense } from 'react';
+import {Suspense} from 'react';
 import {Route, Routes} from "react-router-dom";
 import {MainLayoutRoutes} from "../../index";
 import {TopNav} from "./TopNav";
+import {ToastContainer, ToastContainerProps} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Layout = () => {
+
+    const toastProps: ToastContainerProps = {
+        newestOnTop: true,
+        position: "bottom-right",
+        autoClose: 5000,
+    }
 
     return (
         <Routes location="">
@@ -12,14 +20,16 @@ export const Layout = () => {
                 <Route
                     key={index}
                     path={route.path}
-                    element={<>
-                        <TopNav/>
-                        <Suspense fallback={<></>}>
-                            <main role="main">
-                                {route.element}
-                            </main>
-                        </Suspense>
-                    </>}
+                    element={
+                        <>
+                            <TopNav/>
+                            <ToastContainer {...toastProps} />
+                            <Suspense fallback={<></>}>
+                                <main role="main">
+                                    {route.element}
+                                </main>
+                            </Suspense>
+                        </>}
                 />
             ))}
         </Routes>
