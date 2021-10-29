@@ -57,6 +57,61 @@ export class ClassroomClient extends ClientBase {
     }
 }
 
+export class DebugClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    /**
+     * @param studentId (optional) 
+     * @param event (optional) 
+     * @return Success
+     */
+    addEvent(studentId?: string | undefined, event?: UrgentEvent | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Debug/AddEvent?";
+        if (studentId === null)
+            throw new Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
+        if (event === null)
+            throw new Error("The parameter 'event' cannot be null.");
+        else if (event !== undefined)
+            url_ += "event=" + encodeURIComponent("" + event) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "PUT",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAddEvent(_response);
+        });
+    }
+
+    protected processAddEvent(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+}
+
 export class StudentsClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -102,6 +157,44 @@ export class StudentsClient extends ClientBase {
             });
         }
         return Promise.resolve<Student[]>(<any>null);
+    }
+
+    /**
+     * @param body (optional) 
+     * @return Success
+     */
+    addStudent(body?: Student | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Students";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAddStudent(_response);
+        });
+    }
+
+    protected processAddStudent(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
     }
 }
 
@@ -168,7 +261,8 @@ export interface NearbyBluetooth {
 export interface Student {
     id?: string;
     deviceHardwareAddress?: string | undefined;
-    name?: string | undefined;
+    name: string;
+    age: number;
     teachers?: Teacher[] | undefined;
 }
 
@@ -177,6 +271,13 @@ export interface Teacher {
     firstName?: string | undefined;
     lastName?: string | undefined;
     students?: Student[] | undefined;
+}
+
+export enum UrgentEvent {
+    Falling = "Falling",
+    Crying = "Crying",
+    PeePeePooPoo = "PeePeePooPoo",
+    Dying = "Dying",
 }
 
 export class ApiException extends Error {

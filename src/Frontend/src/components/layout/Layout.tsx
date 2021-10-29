@@ -12,14 +12,15 @@ export const Layout = () => {
                 <Route
                     key={index}
                     path={route.path}
-                    element={<>
-                        <TopNav/>
-                        <Suspense fallback={<></>}>
-                            <main role="main">
-                                {route.element}
-                            </main>
-                        </Suspense>
-                    </>}
+                    element={
+                        <>
+                            <TopNav/>
+                            <Suspense fallback={<></>}>
+                                <main role="main">
+                                    {route.element}
+                                </main>
+                            </Suspense>
+                        </>}
                 />
             ))}
         </Routes>
