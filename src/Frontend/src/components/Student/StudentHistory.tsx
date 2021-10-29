@@ -35,7 +35,7 @@ export const StudentHistory = ({student}:{student:Student}) => {
         <div className="bg-white shadow-lg rounded-xl flex flex-col overflow-y-hidden">
             <h1 className="text-gray-700 py-5 px-5 font-bold text-2xl">History</h1>
             <div className="overflow-y-auto scrollbar">
-                {[...history].reverse().map(history => (
+                {[...history].filter(n => n.student?.id === student.id).reverse().map(history => (
                     <HistoryEntry key={"dt-" + history.date!} history={history}/>
                 ))}
             </div>

@@ -26,7 +26,7 @@ export const StudentList = ({students, setSelectedStudent}:StudentListProps) => 
                         return (
                             <button onClick={() => {setSelectedStudent(student)}} key={student.id} className="p-3 grid grid-cols-3">
                                 <img className="col-span-1 object-contain transform w-16 rounded-full" alt='kid' src={ImagePathForStudent(student)} />
-                                <div className="flex justify-center align-middle col-span-2">
+                                <div className="flex justify-center align-middle self-center col-span-2">
                                     <h1 className="align-middle text-center text-lg">{student.name}</h1>
                                 </div>
                             </button>

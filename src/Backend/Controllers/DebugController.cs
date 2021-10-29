@@ -34,4 +34,16 @@ public class DebugController : ControllerBase
         await _activityHub.Clients.All.ReceiveUrgentEvent(new EventHistory {Student = student, Event = @event});
         return Ok();
     }
+    
+    [HttpPut("SetVocalActivity")]
+    public async Task<IActionResult> SetVocalActivity(Guid studentId, UrgentEvent @event)
+    {
+        throw new NotImplementedException();
+    }
+    
+    [HttpPut("SetActivity")]
+    public async Task<IActionResult> SetActivity(Guid studentId, UrgentEvent @event)
+    {
+        throw new NotImplementedException();
+    }
 }
