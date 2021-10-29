@@ -1,5 +1,10 @@
 import {HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
 
+export interface IHubClient {
+    connect: () => Promise<void>,
+    disconnect: () => Promise<void>
+}
+
 export class ActivityHubClient {
 
     public readonly connection = new HubConnectionBuilder()

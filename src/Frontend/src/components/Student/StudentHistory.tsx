@@ -1,4 +1,6 @@
 export const StudentHistory = () => {
+
+
     return (
         <div className="bg-white shadow-lg rounded-xl flex flex-col overflow-y-hidden">
             <h1 className="text-gray-700 py-5 px-5 font-bold text-2xl">History</h1>
@@ -22,7 +24,6 @@ export const StudentHistory = () => {
                 <HistoryEntry/>
             </div>
         </div>
-
     );
 }
 
