@@ -64,6 +64,14 @@ public class AudioListener {
         return (float)sum/bufferSize;
     }
 
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public short[] readBuffer(int bufferSize) {
+        short[] data = new short[bufferSize];
+        recorder.read(data, 0, bufferSize, AudioRecord.READ_NON_BLOCKING);
+        return data;
+    }
+
     public float getAverageFrequency(){ // TODO: implement FFT
 
         return -1;

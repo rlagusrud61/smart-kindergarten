@@ -1,6 +1,9 @@
 package com.bigbrain.senseboard.sensor;
 
+import com.bigbrain.senseboard.MainActivity;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
@@ -13,19 +16,22 @@ public class AudioHandler {
     private Instance instance;
     private Classifier classifier;
 
-    //ToDo use weka.Activites enum class for this
+    private final MainActivity mainActivity;
+
+
 
 
     private final String[] sounds = {"crying", "laughing", "shouting", "talking", "silent"};
 
-    private int bufferSize;
+    public final int bufferSize;
     private String classifierPath = "bruh.model";
 
-    public AudioHandler(int buffer){
+    public AudioHandler(int buffer, MainActivity mainActivity){
+        this.mainActivity = mainActivity;
         bufferSize = buffer;
         ArrayList<Attribute> attributes = new ArrayList<>();
 
-        for(int i=0; i<bufferSize; i++){
+        for(int i=1; i<=bufferSize; i++){
             attributes.add(new Attribute(Integer.toString(i)));
         }
 
@@ -35,45 +41,35 @@ public class AudioHandler {
         }
         attributes.add(new Attribute(Integer.toString(bufferSize+1), soundList));
 
-        instances = new Instances("Bruh", attributes, 1);
+        instances = new Instances("Bruh", attributes, 5);
+        instances.setClassIndex(bufferSize);
 
         try {
-            classifier = (Classifier) weka.core.SerializationHelper.read(classifierPath);
+            classifier = (Classifier) weka.core.SerializationHelper.read(mainActivity.getAssets().open("bruh.model"));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public int classifyAudio(double[] audioBuffer){
-        int result = -1;
+
+    public double classifyAudio(short[] audioBuffer) {
+        double result = -1;
         if(audioBuffer.length != bufferSize) return -1;
 
-        instance = new DenseInstance(1, audioBuffer);
-        instance.setDataset(instances);
-
-        try {
-            result = (int)classifier.classifyInstance(instance);
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return -1;
-    }
-
-    public int classifyAudio(short[] audioBuffer) {
-        int result = -1;
-        if(audioBuffer.length != bufferSize) return -1;
-
-        double[] fixedBuffer = new double[audioBuffer.length];
-        for(int i=0; i<fixedBuffer.length; i++) {
-            fixedBuffer[i] = (double) audioBuffer[i];
+        double[] fixedBuffer = new double[bufferSize+1];
+        for(int i=0; i<bufferSize; i++) {
+            fixedBuffer[i] = (double) audioBuffer[i]/65536;
         }
 
         instance = new DenseInstance(1, fixedBuffer);
         instance.setDataset(instances);
 
+        long time = System.currentTimeMillis();
+
         try {
-            result = (int)classifier.classifyInstance(instance);
+            result = classifier.classifyInstance(instance);
+            System.out.println(Arrays.toString(fixedBuffer));
+            System.out.println("time elapsed: " + (System.currentTimeMillis()-time));
             return result;
         } catch (Exception e) {
             e.printStackTrace();

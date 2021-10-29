@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bigbrain.senseboard.sensor.AudioHandler;
 import com.bigbrain.senseboard.sensor.AudioListener;
+import com.bigbrain.senseboard.sensor.AudioTester;
 import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private AudioListener al;
     private BluetoothListener bl;
     private AudioHandler ah;
+    private AudioTester at;
 
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
@@ -64,10 +66,16 @@ public class MainActivity extends AppCompatActivity {
 
         setupSwitches();
 
+        //set up audio listener
 
+        setupAudio();
         //Set up Audio handler
 
         setupAudioHandler();
+
+//        //set up Audio classification tester
+//
+//        setupAudioTester();
 
     }
 
@@ -115,8 +123,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    void setupAudioHandler(){
-        ah = new AudioHandler(250);
+    private void setupAudioHandler(){
+        ah = new AudioHandler(250, this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -125,6 +133,12 @@ public class MainActivity extends AppCompatActivity {
 
         bl.start();
     }
+
+    private void setupAudioTester() {
+        at = new AudioTester(ah, al, 1000);
+        at.start();
+    }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
