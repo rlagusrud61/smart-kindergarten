@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
         setupAudioHandler();
 
-        //set up Audio classification tester
-
-        setupAudioTester();
+//        //set up Audio classification tester
+//
+//        setupAudioTester();
 
     }
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupAudioTester() {
-        at = new AudioTester(ah, al, 500);
+        at = new AudioTester(ah, al, 1000);
         at.start();
     }
 
