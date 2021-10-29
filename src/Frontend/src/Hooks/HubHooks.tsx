@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {IHubClient} from "../clients/signalr/ActivityHubClient";
+import {IHubClient} from "../clients/signalr/ActivityHub";
 
 export function UseHub<T extends IHubClient>(hubType: new () => T): T | undefined {
 

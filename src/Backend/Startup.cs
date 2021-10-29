@@ -27,6 +27,8 @@ public class Startup
                 Title = "KindergartenApi",
                 Version = "v1"
             });
+            
+            c.DocumentFilter<SwaggerHubTypeFilter>();
         });
         
         // services.AddCors(m =>

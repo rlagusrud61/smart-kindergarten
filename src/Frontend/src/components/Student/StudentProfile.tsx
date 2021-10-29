@@ -11,7 +11,7 @@ export function StudentProfile({student}: StudentProfileProps) {
         <>
             {/* Image and name of student  */}
             <ProfileDetails student={student}/>
-            <StudentHistory/>
+            <StudentHistory student={student}/>
         </>
     );
 }

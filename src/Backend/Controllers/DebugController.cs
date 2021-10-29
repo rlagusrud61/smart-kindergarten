@@ -1,6 +1,7 @@
 ﻿using KindergartenApi.Context;
 using KindergartenApi.Hubs;
 using KindergartenApi.Models.DB;
+using KindergartenApi.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,7 @@ public class DebugController : ControllerBase
         if (student is null)
             return BadRequest();
 
-        await _activityHub.Clients.All.ReceiveStudentEvent(student, @event);
+        await _activityHub.Clients.All.ReceiveUrgentEvent(new EventHistory {Student = student, Event = @event});
         return Ok();
     }
 }

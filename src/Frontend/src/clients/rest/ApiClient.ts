@@ -253,6 +253,12 @@ export class StudentUploadClient extends ClientBase {
     }
 }
 
+export interface EventHistory {
+    student?: Student;
+    event?: UrgentEvent;
+    date?: Date;
+}
+
 export interface NearbyBluetooth {
     hardwareAddress?: string | undefined;
     rssi?: number;
