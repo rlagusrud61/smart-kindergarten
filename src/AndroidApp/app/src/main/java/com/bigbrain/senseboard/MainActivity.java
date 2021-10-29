@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
         setupAudioHandler();
 
-//        //set up Audio classification tester
-//
+        //set up Audio classification tester
+
 //        setupAudioTester();
 
     }
