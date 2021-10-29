@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {ActivityHub} from "../clients/signalr/ActivityHub";
 import {UseHub} from "../Hooks/HubHooks";
-import {ToastDark} from "../utils/ToastUtil";
+import {ToastDark, ToastDefault} from "../utils/ToastUtil";
 import {EventHistory, Student, UrgentEvent} from "../clients/rest/ApiClient";
 
 export interface ActivityContextProperties {
@@ -21,7 +21,7 @@ export const ActivityProvider = ({children}: ActivityProviderProps) => {
     useEffect(() => {
 
         hub?.urgentEventEvent.addHandler((history:EventHistory) => {
-            ToastDark("Urgent Event", GetUrgentEventMessage(history.student!,history.event!))
+            ToastDefault("Urgent Event", GetUrgentEventMessage(history.student!,history.event!))
         })
 
         // hub?.connect();
