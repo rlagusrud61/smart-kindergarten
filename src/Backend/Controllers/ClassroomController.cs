@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using KindergartenApi.Context;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KindergartenApi.Controllers;
 
@@ -6,9 +9,16 @@ namespace KindergartenApi.Controllers;
 [Route("/api/[controller]")]
 public class ClassroomController : ControllerBase
 {
-    [HttpGet]
-    public ActionResult<IEnumerable<int>> GetClassrooms()
+    private readonly GartenContext _context;
+
+    public ClassroomController(GartenContext context)
     {
-        return new[] { 101, 102, 103, 202, 203, 204 };
+        _context = context;
+    }
+
+    [HttpGet]
+    public ActionResult<IAsyncEnumerable<string>> GetClassrooms()
+    {
+        return Ok(_context.Classrooms.Select(m => m.RoomIdentifier).AsAsyncEnumerable());
     }
 }
