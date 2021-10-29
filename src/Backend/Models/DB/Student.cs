@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace KindergartenApi.Models.DB;
 
 public class Student
@@ -8,6 +10,10 @@ public class Student
     /// </summary>
     public string? DeviceHardwareAddress { get; set; }
 
+    [Required]
     public string Name { get; set; }
+
+    [Required]
+    public int Age { get; set; }
     public IEnumerable<Teacher> Teachers { get; set; }
 }

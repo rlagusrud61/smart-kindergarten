@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using KindergartenApi.Context;
 using KindergartenApi.Models;
 using KindergartenApi.Models.DB;
@@ -22,5 +23,13 @@ public class StudentsController : ControllerBase
     public ActionResult<IAsyncEnumerable<Student>> GetAllStudents()
     {
         return Ok(_context.Children.OrderBy(m => m.Name).AsAsyncEnumerable());
+    }
+
+    [HttpPost(Name = "AddStudent")]
+    public async Task<IActionResult> AddStudent(Student stu)
+    {
+        _context.Add(stu);
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 }
