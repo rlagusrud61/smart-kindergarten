@@ -2,7 +2,7 @@ const colors = require('tailwindcss/colors')
 
 module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   theme: {
     scale: {
       '25': '.25',
@@ -16,7 +16,7 @@ module.exports = {
     },
     container:{
       padding: '2rem',
-      center:true,
+        center:true,
     },
     colors: {
       // inherit: colors.inherit,
@@ -52,6 +52,15 @@ module.exports = {
       'serif': ['Nunito', 'serif'],
     },
     extend: {
+      // backgroundColor: {
+      //   primary: 'var(--color-bg-primary)',
+      //   secondary: 'var(--color-bg-secondary)',
+      // },
+      // textColor: {
+      //   accent: 'var(--color-text-accent)',
+      //   primary: 'var(--color-text-primary)',
+      //   secondary: 'var(--color-text-secondary)',
+      // },
       spacing: {
         '128': '32rem',
         '144': '36rem',

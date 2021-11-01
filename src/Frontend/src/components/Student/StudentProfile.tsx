@@ -18,19 +18,19 @@ export function StudentProfile({student}: StudentProfileProps) {
 
 export const ProfileDetails = ({student}: StudentProfileProps) => {
     return (
-        <div className="bg-white shadow-lg rounded-xl p-3">
+        <div className="bg-white dark:bg-gray-500 shadow-lg rounded-xl p-3">
             <div className="p-4 grid grid-cols-3">
                 <img className="col-span-1 object-contain transform w-32 rounded-full" alt='kid' src={ImagePathForStudent(student)}/>
                 <div className="py-5 col-span-2">
-                    <h1 className="text-gray-700 align-middle font-bold text-3xl">{student.name}</h1>
+                    <h1 className="text-gray-700 dark:text-white align-middle font-bold text-3xl">{student.name}</h1>
                     <br/>
-                    <h3 className="align-middle text-xl">Age : {student.age}</h3>
+                    <h3 className="dark:text-white align-middle text-xl">Age : {student.age}</h3>
                 </div>
             </div>
 
             <div className="p-4 grid grid-cols-3">
-                <HeartFilled className="self-center" color="#BBB" fontSize={"4.5rem"}/>
-                <h1 className="col-span-2 self-center text-2xl">90 BPM</h1>
+                <HeartFilled className="dark:text-white self-center" color="#BBB" fontSize={"4.5rem"}/>
+                <h1 className="dark:text-white col-span-2 self-center text-2xl">90 BPM</h1>
             </div>
         </div>)
 }
