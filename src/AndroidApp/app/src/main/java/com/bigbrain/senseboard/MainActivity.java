@@ -7,11 +7,17 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateUtils;
+import android.text.format.Time;
+import android.util.TimeUtils;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bigbrain.senseboard.sensor.AudioHandler;
@@ -20,9 +26,12 @@ import com.bigbrain.senseboard.sensor.AudioTester;
 import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
+import com.bigbrain.senseboard.util.TimerUtil;
 import com.bigbrain.senseboard.weka.Activities;
 
 import org.apache.commons.lang3.RandomStringUtils;
+
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private AudioHandler ah;
     private AudioTester at;
 
+    private TextView time;
+    private final long MEASUREMENT_DELAY = 3000;
+
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
     }
@@ -49,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Create and display pairing code
 
-        TextView pairingCode = findViewById(R.id.pairingCode);
-        pairingCode.setText(apiCode);
+//        TextView pairingCode = findViewById(R.id.pairingCode);
+//        pairingCode.setText(apiCode);
 
         // Start permission request chain (handled by onRequestPermissionsResult)
 
@@ -77,6 +89,36 @@ public class MainActivity extends AppCompatActivity {
 
 //        setupAudioTester();
 
+        this.time = findViewById(R.id.timerTextView);
+        this.time.setText(formatTime(MEASUREMENT_DELAY));
+//        TimerUtil.startCountDown(this, 0, 3000, 10);
+
+    }
+
+    @SuppressLint("DefaultLocale")
+    private String formatTime(long millis) {
+        this.time.setTextColor(Color.BLACK);
+        return String.format("%02d", (int) Math.floor((double) millis / 1000))
+                + ":"
+                + String.format("%02d", millis % 1000).substring(0,2);
+    }
+
+    public void setTime(long millis) {
+        this.time.setText(formatTime(millis));
+    }
+
+    public void setTimeDone() {
+        this.time.setTextColor(Color.GREEN);
+        this.time.setText(R.string.recordingString);
+    }
+
+    public void startRecordCycle(Activities activity) {
+        TimerUtil.cancelTimer();
+        TimerUtil.startCountDown(this, activity, MEASUREMENT_DELAY, 10);
+    }
+
+    public void doRecord(Activities activity) {
+        this.st.startRecord(activity);
     }
 
 
@@ -115,9 +157,12 @@ public class MainActivity extends AppCompatActivity {
             switches[i].setOnCheckedChangeListener((compoundButton, b) -> {
                 if (b) {
                     ssh.deactivateOthers(switches[finalI]);
-                    st.startRecord(finalI); // Ensure that i is an activity in ClassifiedActivity
+                    startRecordCycle(Activities.values()[finalI]); // Ensure that i is an activity in ClassifiedActivity
+//                    st.startRecord(finalI);
                 } else {
                     st.stopRecord();
+                    this.time.setText(formatTime(MEASUREMENT_DELAY));
+                    TimerUtil.cancelTimer();
                 }
             });
         }

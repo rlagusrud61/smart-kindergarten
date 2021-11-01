@@ -1,5 +1,6 @@
 package com.bigbrain.senseboard.sensor;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
@@ -54,14 +55,16 @@ public class SensorTracker extends Thread {
      */
     public void stopRecord () {
         this.record.set(false);
-        fu.close();
+        if (fu != null) {
+            fu.close();
+        }
     }
 
 
 
-    public void startRecord(int activity) {
+    public void startRecord(Activities activity) {
         fu = new FileUtil(this.context);
-        fu.setFileName("Activity_" + Activities.values()[activity].label + ".csv");
+        fu.setFileName("Activity_" + activity.label + ".csv");
         fu.setup();
         this.record.set(true);
     }

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">SenseBoard</string>
     <string name="record">Record</string>
+    <string name="recordingString">RECORDING</string>
 </resources>

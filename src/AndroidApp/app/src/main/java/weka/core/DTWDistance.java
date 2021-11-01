@@ -33,7 +33,8 @@ import weka.core.neighboursearch.PerformanceStats;
  *
  * <!-- options-end -->
  *
- * @author César Soto (csoto@uclv.edu.cu)
+ * @author C
+ * ï¿½sar Soto (csoto@uclv.edu.cu)
  *
  */
 public class DTWDistance implements DistanceFunction, Serializable, Cloneable, OptionHandler {
