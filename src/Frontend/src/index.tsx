@@ -4,7 +4,7 @@ import Home from './components/pages/Home';
 import {BrowserRouter} from "react-router-dom";
 import {RouteObject} from "react-router";
 import {Layout} from "./components/layout/Layout";
-import {OtherPage} from "./components/pages/OtherPage";
+import {History} from "./components/pages/History";
 import {ActivityProvider} from "./context/ActivityContext";
 import './styles/tailwind.css';
 import './styles/Kindergarten.scss';
@@ -15,8 +15,8 @@ export const MainLayoutRoutes: RouteObject[] = [
         element: <Home/>
     },
     {
-        path: "/OtherPage",
-        element: <OtherPage/>
+        path: "/History",
+        element: <History/>
     }
 ]
 

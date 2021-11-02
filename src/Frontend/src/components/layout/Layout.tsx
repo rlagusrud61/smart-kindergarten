@@ -5,6 +5,8 @@ import {MainLayoutRoutes} from "../../index";
 import {TopNav} from "./TopNav";
 import {ToastContainer, ToastContainerProps} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import {ThemeProvider} from "../components/ThemeContext";
+import {Background} from "../components/Background";
 
 export const Layout = () => {
 
@@ -22,6 +24,8 @@ export const Layout = () => {
                     path={route.path}
                     element={
                         <>
+                            <ThemeProvider initialTheme={"light"}>
+                                <Background>
                             <TopNav/>
                             <ToastContainer {...toastProps} />
                             <Suspense fallback={<></>}>
@@ -29,6 +33,8 @@ export const Layout = () => {
                                     {route.element}
                                 </main>
                             </Suspense>
+                                </Background>
+                            </ThemeProvider>
                         </>}
                 />
             ))}
