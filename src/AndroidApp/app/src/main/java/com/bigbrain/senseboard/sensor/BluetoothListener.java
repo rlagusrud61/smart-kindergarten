@@ -6,11 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
 import com.bigbrain.senseboard.MainActivity;
+import com.bigbrain.senseboard.R;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +41,7 @@ public class BluetoothListener extends Thread {
 //                    System.out.println(name + ": " + device.getAddress() + " -> " + rssi);
 
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    System.out.println(intent.getStringExtra(BluetoothDevice.EXTRA_NAME) + " : " + device.getAddress());
 
                     if (!devices.contains(device)) {
                         devices.add(intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
@@ -54,22 +57,25 @@ public class BluetoothListener extends Thread {
      * Run one discovery cycle and cancel discovery afterwards
      */
     public void discover() {
-        bluetoothAdapter.startDiscovery();
         if (bluetoothAdapter.isDiscovering()) {
             bluetoothAdapter.cancelDiscovery();
         }
+        bluetoothAdapter.startDiscovery();
+
     }
 
     @Override
     public void run() {
-        discover();
 
         while (true) {
             long time = System.currentTimeMillis();
 
             System.out.println("List " + devices);
+            System.out.println("MAC " + getMAC());
             devices.clear();
+
             discover();
+
 
             try {
                 sleep(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
@@ -78,6 +84,11 @@ public class BluetoothListener extends Thread {
             }
         }
 
+    }
+
+    public String getMAC() {
+        SharedPreferences sharedPref = context.getPreferences(Context.MODE_PRIVATE);
+        return sharedPref.getString(context.getString(R.string.addressMAC), null);
     }
 
     /**

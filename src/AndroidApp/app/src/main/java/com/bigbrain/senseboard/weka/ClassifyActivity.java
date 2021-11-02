@@ -172,14 +172,14 @@ public class ClassifyActivity {
         int maxPredictionKey = 0;
         for (Map.Entry<Integer, Integer> entry : readings.entrySet()){
             weightedValue = (double) entry.getValue() * activityWeights[entry.getKey()];
-            Log.d(TAG, "entry: " + entry.getKey() + " weighted value: " + weightedValue);
+//            Log.d(TAG, "entry: " + entry.getKey() + " weighted value: " + weightedValue);
             if (maxPredictionValue < entry.getValue())
             {
                 maxPredictionValue = weightedValue;
                 maxPredictionKey = entry.getKey();
             }
         }
-        System.out.println("Max predicted activity is: " + activity[maxPredictionKey]);
+//        System.out.println("Max predicted activity is: " + activity[maxPredictionKey]);
         //System.out.println("The max prediction key is " + maxPredictionKey);
         return maxPredictionKey;
     }

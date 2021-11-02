@@ -8,6 +8,9 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -17,7 +20,10 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.TimeUtils;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bigbrain.senseboard.sensor.AudioHandler;
@@ -47,6 +53,9 @@ public class MainActivity extends AppCompatActivity {
     private AudioTester at;
 
     private TextView time;
+
+    private EditText enterMAC;
+    private Button buttonMAC;
     private final long MEASUREMENT_DELAY = 3000;
 
     public MainActivity() {
@@ -91,7 +100,29 @@ public class MainActivity extends AppCompatActivity {
 
         this.time = findViewById(R.id.timerTextView);
         this.time.setText(formatTime(MEASUREMENT_DELAY));
-//        TimerUtil.startCountDown(this, 0, 3000, 10);
+
+        setupMAC();
+
+
+    }
+
+    private void setupMAC() {
+        this.enterMAC = findViewById(R.id.editTextMAC);
+        this.buttonMAC = findViewById(R.id.buttonMAC);
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        String value = sharedPref.getString(getString(R.string.addressMAC), null);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        buttonMAC.setOnClickListener(view -> {
+            System.out.println("bruh");
+            editor.remove(getString(R.string.addressMAC));
+            editor.putString(getString(R.string.addressMAC), String.valueOf(enterMAC.getText()));
+            editor.apply();
+        });
+
+        if (value != null) {
+            enterMAC.setText(value);
+        }
 
     }
 
@@ -174,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupBluetoothListener() {
-        bl = new BluetoothListener(this, 60000);
+        bl = new BluetoothListener(this, 12000); //60000
 
         bl.start();
     }
