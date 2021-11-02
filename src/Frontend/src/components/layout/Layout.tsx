@@ -5,8 +5,8 @@ import {MainLayoutRoutes} from "../../index";
 import {TopNav} from "./TopNav";
 import {ToastContainer, ToastContainerProps} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import {ThemeProvider} from "../components/ThemeContext";
-import {Background} from "../components/Background";
+import {ThemeProvider} from "../theme/ThemeContext";
+import {Background} from "../theme/Background";
 
 export const Layout = () => {
 

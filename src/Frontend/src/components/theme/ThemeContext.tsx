@@ -18,7 +18,6 @@ const getInitialTheme = () => {
             return "dark";
         }
     }
-    // If you want to use dark theme as the default, return 'dark' instead
     return "light";
 };
 interface ThemeContextProps{

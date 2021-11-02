@@ -1,6 +1,6 @@
 import {Link} from "react-router-dom";
 import React from "react";
-import {Toggle} from "../components/Toggle";
+import {Toggle} from "../theme/Toggle";
 
 export const TopNav = () => {
     return (

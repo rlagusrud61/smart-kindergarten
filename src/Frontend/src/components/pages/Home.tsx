@@ -34,7 +34,7 @@ function Home() {
     }, [])
 
     return (
-        <main className="dark:bg-gray-800 bg-white relative h-screen overflow-y-hidden pt-16">
+        <main className="relative h-screen overflow-y-hidden pt-16">
 <FadeIn>
             <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
                 <div className="grid grid-cols-3 grid-rows-2 gap-20 px-4 py-12 sm:px-0 h-full max-h-full overflow-y-hidden" style={{gridTemplateRows:"4rem 1fr",gridRowGap:0}}>

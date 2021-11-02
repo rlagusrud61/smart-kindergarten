@@ -47,8 +47,6 @@ export const GetUrgentEventMessage = (student:Student, e:UrgentEvent) : string =
             return `${student.name} is crying`
         case UrgentEvent.Falling:
             return `${student.name} has fallen 🪦`
-        case UrgentEvent.Dying:
-            return `${student.name} is dying inside`
         default:
             return `Unknown Event`
     }
