@@ -1,6 +1,7 @@
 import React, {Fragment} from "react";
 import {Dismiss12Filled, LineHorizontal3Filled} from "@fluentui/react-icons";
 import {Disclosure, Menu, Transition} from '@headlessui/react';
+import {Link} from "react-router-dom";
 
 function classNames(...classes:any) {
     return classes.filter(Boolean).join(' ')
@@ -13,8 +14,8 @@ const user = {
         'img/kidlmao.jpg',
 }
 const navigation = [
-    { name: 'Dashboard', href: '#', current: true },
-    { name: 'History', href: '#', current: false },
+    { name: 'Dashboard', href: '/', current: true },
+    { name: 'History', href: '/History', current: false },
 
 ]
 
@@ -41,7 +42,6 @@ export const TopNav = () => {
                                             {navigation.map((item) => (
                                                 <a
                                                     key={item.name}
-                                                    href={item.href}
                                                     className={classNames(
                                                         item.current
                                                             ? 'bg-white text-gray-800 bg-opacity-90'
@@ -49,8 +49,9 @@ export const TopNav = () => {
                                                         'px-3 py-2 rounded-md text-sm font-medium'
                                                     )}
                                                     aria-current={item.current ? 'page' : undefined}
-                                                >
+                                                ><Link to={item.href}>
                                                     {item.name}
+                                                </Link>
                                                 </a>
                                             ))}
                                         </div>
@@ -85,8 +86,9 @@ export const TopNav = () => {
                                                                         active ? 'bg-gray-100' : '',
                                                                         'block px-4 py-2 text-sm text-gray-700'
                                                                     )}
-                                                                >
+                                                                ><Link to={item.href}>
                                                                     {item.name}
+                                                                </Link>
                                                                 </a>
                                                             )}
                                                         </Menu.Item>

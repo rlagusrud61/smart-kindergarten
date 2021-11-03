@@ -1,5 +1,5 @@
 import { SearchBar } from "../components/SearchBar";
-import { useState } from "react";
+import React, { useState } from "react";
 import {Student} from "../../clients/rest/ApiClient";
 import {ImagePathForStudent} from "./StudentProfile";
 
@@ -12,7 +12,9 @@ export const StudentList = ({students, setSelectedStudent}:StudentListProps) => 
     const [searchQuery, setSearchQuery] = useState("");
 
     return (
-        <div className="overflow-auto h-full p-7">
+        <div className="overflow-y-auto h-full p-7 md:w-full">
+
+            <h1 className="text-center text-4xl font-bold text-gray-700 dark:text-white">Students</h1>
             <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
 

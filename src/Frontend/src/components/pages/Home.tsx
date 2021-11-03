@@ -26,21 +26,17 @@ function Home() {
 
     return (
             // the scrollbar is shit on Edge. Clearly, Chrome is superior.
-        <main className="relative h-screen scrollbar overflow-y-auto pt-16">
+        <main className="relative h-screen">
 <FadeIn>
-            <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
-                <div className="grid grid-cols-3 grid-rows-2 gap-20 px-4 py-12 sm:px-0 h-full max-h-full overflow-y-hidden" style={{gridTemplateRows:"4rem 1fr",gridRowGap:0}}>
-                    <h1 className="text-center text-4xl font-bold text-gray-700 dark:text-white">Students</h1>
-                    <h1 className="text-center text-4xl font-bold text-gray-700 col-span-2 dark:text-white">Student Profile</h1>
-                    <div className="flex flex-col h-full max-h-full">
-                        <div className="dark:bg-gray-700 bg-gray-100 shadow-lg rounded-lg flex-grow">
+            <div className="flex flex-col md:flex-row max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
+                    <div className="h-full max-h-full md:flex-col">
+                        <div className="m-4 dark:bg-gray-700 bg-gray-100 shadow-lg rounded-lg">
                             <StudentList students={students} setSelectedStudent={setSelectedStudent}/>
                         </div>
                     </div>
-                    <div className="dark:bg-gray-700 col-span-2 h-full max-h-full overflow-y-hidden bg-gray-100 shadow-lg rounded-lg p-7 flex flex-col gap-7">
+                    <div className="m-4 dark:bg-gray-700 h-full max-h-full overflow-y-hidden bg-gray-100 shadow-lg rounded-lg p-7 flex-grow flex flex-col gap-7">
                         {selectedStudent && (<StudentProfile student={selectedStudent}/>)}
                     </div>
-                </div>
             </div>
 </FadeIn>
         </main>

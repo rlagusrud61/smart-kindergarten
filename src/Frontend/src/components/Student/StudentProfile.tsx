@@ -1,6 +1,7 @@
 import {StudentHistory} from "./StudentHistory";
 import {Student} from "../../clients/rest/ApiClient";
 import {HeartFilled} from "@fluentui/react-icons";
+import React from "react";
 
 interface StudentProfileProps {
     student: Student;
@@ -18,7 +19,10 @@ export function StudentProfile({student}: StudentProfileProps) {
 
 export const ProfileDetails = ({student}: StudentProfileProps) => {
     return (
-        <div className="bg-white dark:bg-gray-500 shadow-lg rounded-xl p-3">
+        <div>
+
+        <h1 className="mb-6 text-center text-4xl font-bold text-gray-700 dark:text-white">Student Profile</h1>
+    <div className="md:w-full bg-white dark:bg-gray-500 shadow-lg rounded-xl p-3">
             <div className="p-4 grid grid-cols-3">
                 <img className="col-span-1 object-contain transform w-32 rounded-full" alt='kid' src={ImagePathForStudent(student)}/>
                 <div className="py-5 col-span-2">
@@ -32,6 +36,7 @@ export const ProfileDetails = ({student}: StudentProfileProps) => {
                 <HeartFilled className="dark:text-white self-center" color="#BBB" fontSize={"4.5rem"}/>
                 <h1 className="dark:text-white col-span-2 self-center text-2xl">90 BPM</h1>
             </div>
+        </div>
         </div>)
 }
 
