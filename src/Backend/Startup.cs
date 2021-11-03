@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using KindergartenApi.Context;
 using KindergartenApi.Hubs;
+using KindergartenApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace KindergartenApi;
@@ -31,17 +32,6 @@ public class Startup
             c.DocumentFilter<SwaggerHubTypeFilter>();
         });
         
-        // services.AddCors(m =>
-        // {
-        //     m.AddDefaultPolicy(builder =>
-        //     {
-        //         builder.AllowAnyHeader();
-        //         builder.AllowAnyMethod();
-        //         builder.AllowCredentials();
-        //         builder.WithOrigins("http://localhost:3000/","https://localhost:3000","https://ss.mineapple.net");
-        //     });
-        // });
-        
         services.AddCors(opts =>
         {
             opts.AddDefaultPolicy(builder =>
@@ -67,13 +57,14 @@ public class Startup
                 opts.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 opts.PayloadSerializerOptions.PropertyNameCaseInsensitive = true;
             });
+
+        services.AddSingleton<HistoryService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "KindergartenApi v1"));
-
         
         app.UseRouting();
         
@@ -95,6 +86,7 @@ public class Startup
                 "api/v{v:apiVersion}/{controller}/{action}/{id?}");
 
             endpoints.MapHub<ActivityHub>("/Hubs/Activity");
+            endpoints.MapHub<ProximityHub>("/Hubs/Proximity");
             endpoints.MapHub<StudentHub>("/Hubs/Student/{id}");
         });
     }

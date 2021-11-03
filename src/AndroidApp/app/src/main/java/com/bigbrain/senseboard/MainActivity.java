@@ -1,15 +1,8 @@
 package com.bigbrain.senseboard;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -17,15 +10,17 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.format.DateUtils;
-import android.text.format.Time;
-import android.util.TimeUtils;
-import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.bigbrain.senseboard.sensor.AudioHandler;
 import com.bigbrain.senseboard.sensor.AudioListener;
 import com.bigbrain.senseboard.sensor.AudioTester;
@@ -36,8 +31,6 @@ import com.bigbrain.senseboard.util.TimerUtil;
 import com.bigbrain.senseboard.weka.Activities;
 
 import org.apache.commons.lang3.RandomStringUtils;
-
-import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -59,6 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView currentActivity;
     private final long MEASUREMENT_DELAY = 3000;
 
+    private RequestQueue volleyQueue;
+    private final McWrap mcWrap = new McWrap();
+
+
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
     }
@@ -69,48 +66,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Create and display pairing code
-
-//        TextView pairingCode = findViewById(R.id.pairingCode);
-//        pairingCode.setText(apiCode);
-
         // Start permission request chain (handled by onRequestPermissionsResult)
-
         this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}
-            , Permissions.PERMISSION_RECORD_AUDIO);
+                , Permissions.PERMISSION_RECORD_AUDIO);
 
-
-        // Set up and start sensor tracker with given sensors
 
         setupSensorTracker();
-
-        // Set up switches
-
         setupSwitches();
-
-        //set up audio listener
-
         setupAudio();
-        //Set up Audio handler
-
         setupAudioHandler();
-
-        //set up Audio classification tester
-
+        setupMAC();
 //        setupAudioTester();
+
+        volleyQueue = Volley.newRequestQueue(this);
 
         this.time = findViewById(R.id.timerTextView);
         this.time.setText(formatTime(MEASUREMENT_DELAY));
 
         this.currentActivity = findViewById(R.id.currentActivity);
-
-        setupMAC();
-
-
     }
 
-    public void setCurrentActivity(String activity) {
-        this.currentActivity.setText(activity);
+    public void setCurrentActivity(Activities activity) {
+        this.currentActivity.setText(activity.label);
     }
 
     private void setupMAC() {
@@ -121,10 +98,12 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = sharedPref.edit();
         buttonMAC.setOnClickListener(view -> {
+            String mac = String.valueOf(enterMAC.getText());
             System.out.println("bruh");
             editor.remove(getString(R.string.addressMAC));
-            editor.putString(getString(R.string.addressMAC), String.valueOf(enterMAC.getText()));
+            editor.putString(getString(R.string.addressMAC), mac);
             editor.apply();
+            mcWrap.hardwareAddress = mac;
         });
 
         if (value != null) {
@@ -138,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         this.time.setTextColor(Color.BLACK);
         return String.format("%02d", (int) Math.floor((double) millis / 1000))
                 + ":"
-                + String.format("%02d", millis % 1000).substring(0,2);
+                + String.format("%02d", millis % 1000).substring(0, 2);
     }
 
     public void setTime(long millis) {
@@ -206,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setupAudioHandler(){
+    private void setupAudioHandler() {
         ah = new AudioHandler(250, this);
     }
 
@@ -221,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
         at = new AudioTester(ah, al, 1000);
         at.start();
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)

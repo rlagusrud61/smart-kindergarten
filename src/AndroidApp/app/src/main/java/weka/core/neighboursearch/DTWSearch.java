@@ -12,7 +12,7 @@ import weka.core.*;
  * <p/>
  * <!-- globalinfo-end -->
  *
- * @author César Soto-Valero (cesarsotovalero@gmail.com)
+ * @author Cesar Soto-Valero (cesarsotovalero@gmail.com)
  */
 public class DTWSearch extends NearestNeighbourSearch {
 

@@ -7,6 +7,8 @@ namespace KindergartenApi.Hubs;
 public interface IActivityHub
 {
     Task ReceiveUrgentEvent(EventHistory eventHistory);
+    void ReceiveActivityUpdate(Guid studentId, Activity activity);
+    void ReceiveVocalActivityUpdate(Guid studentId, VocalActivity activity);
 }
 
 public class ActivityHub : Hub<IActivityHub>
