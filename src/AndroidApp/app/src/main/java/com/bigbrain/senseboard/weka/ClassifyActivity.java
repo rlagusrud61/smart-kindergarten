@@ -33,8 +33,11 @@ public class ClassifyActivity {
     private final double[] activityWeights = {1, 1, 1, 1, 1, 1};
     String current_state;
 
+    private MainActivity context;
+
 
     public ClassifyActivity(MainActivity act) {
+        this.context = act;
         createTrainingSet();
         try {
             cls = (Classifier) weka.core.SerializationHelper.read(act.getAssets().open("ModelJ48.model"));
@@ -92,6 +95,7 @@ public class ClassifyActivity {
             prediction = (int)cls.classifyInstance(instance);
             //System.out.println( "the prediction is: " + prediction);
             //System.out.println("the predicted activity is " + activity[prediction]);
+            this.context.setCurrentActivity(activity[prediction]);
 
             int count = 0;
             //System.out.println("does readings contain the key? " + this.readings.containsKey(prediction));
