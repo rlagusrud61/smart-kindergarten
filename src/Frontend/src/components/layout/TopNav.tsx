@@ -2,6 +2,7 @@ import React, {Fragment} from "react";
 import {Dismiss12Filled, LineHorizontal3Filled} from "@fluentui/react-icons";
 import {Disclosure, Menu, Transition} from '@headlessui/react';
 import {Link} from "react-router-dom";
+import {Toggle} from "../theme/Toggle";
 
 function classNames(...classes:any) {
     return classes.filter(Boolean).join(' ')
@@ -59,13 +60,15 @@ export const TopNav = () => {
                                 </div>
                                 <div className="hidden md:block">
                                     <div className="ml-4 flex items-center md:ml-6">
+                                        <Toggle/>
                                         {/* Profile dropdown */}
                                         <Menu as="div" className="ml-3 relative">
-                                            <div>
+                                            <div className="flex flex-row">
                                                 <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                                     <span className="sr-only">Open user menu</span>
-                                                    <img className="h-8 w-8 rounded-full" src="img/kidlmao.jpg" alt="" />
+                                                    <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
                                                 </Menu.Button>
+
                                             </div>
                                             <Transition
                                                 as={Fragment}
@@ -137,6 +140,9 @@ export const TopNav = () => {
                                     <div className="ml-3">
                                         <div className="text-base font-medium leading-none text-white">{user.name}</div>
                                         <div className="text-sm font-medium leading-none text-white">{user.email}</div>
+                                    </div>
+                                    <div className="ml-3 flex-shrink-0">
+                                    <Toggle/>
                                     </div>
                                 </div>
                                 <div className="mt-3 px-2 space-y-1">
