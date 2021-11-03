@@ -45,7 +45,7 @@ export const TopNav = () => {
                                                     key={item.name}
                                                     className={classNames(
                                                         item.current
-                                                            ? 'bg-white text-gray-800 bg-opacity-90'
+                                                            ? 'bg-white text-gray-800 bg-opacity-90 dark:bg-gray-600 dark:bg-opacity-90 dark:text-white'
                                                             : 'text-white hover:bg-gray-700 hover:text-white hover:bg-opacity-70',
                                                         'px-3 py-2 rounded-md text-sm font-medium'
                                                     )}
@@ -62,7 +62,7 @@ export const TopNav = () => {
                                     <div className="ml-4 flex items-center md:ml-6">
                                         <Toggle/>
                                         {/* Profile dropdown */}
-                                        <Menu as="div" className="ml-3 relative">
+                                        <Menu as="div" className="z-10 ml-3 relative">
                                             <div className="flex flex-row">
                                                 <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                                     <span className="sr-only">Open user menu</span>

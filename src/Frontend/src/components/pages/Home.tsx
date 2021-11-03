@@ -26,7 +26,7 @@ function Home() {
 
     return (
             // the scrollbar is shit on Edge. Clearly, Chrome is superior.
-        <main className="relative h-screen">
+        <main className="relative">
 <FadeIn>
             <div className="flex flex-col md:flex-row max-w-7xl mx-auto sm:px-6 lg:px-8 h-full">
                     <div className="h-full max-h-full md:flex-col">
