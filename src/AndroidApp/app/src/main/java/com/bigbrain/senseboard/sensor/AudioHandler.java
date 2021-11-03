@@ -1,9 +1,12 @@
 package com.bigbrain.senseboard.sensor;
 
 import com.bigbrain.senseboard.MainActivity;
+import com.bigbrain.senseboard.weka.VocalActivities;
+import com.google.common.base.Enums;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
@@ -18,11 +21,6 @@ public class AudioHandler {
 
     private final MainActivity mainActivity;
 
-
-
-
-    private final String[] sounds = {"crying", "laughing", "shouting", "talking", "silent"};
-
     public final int bufferSize;
     private String classifierPath = "bruh.model";
 
@@ -36,8 +34,8 @@ public class AudioHandler {
         }
 
         ArrayList<String> soundList = new ArrayList<>();
-        for(int i=0; i<sounds.length; i++){
-            soundList.add(sounds[i]);
+        for(int i=0; i<VocalActivities.values().length; i++){
+            soundList.add(VocalActivities.values()[i].label.toLowerCase());
         }
         attributes.add(new Attribute(Integer.toString(bufferSize+1), soundList));
 

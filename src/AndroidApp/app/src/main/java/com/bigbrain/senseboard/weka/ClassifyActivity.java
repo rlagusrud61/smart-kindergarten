@@ -1,4 +1,5 @@
 package com.bigbrain.senseboard.weka;
+
 import android.content.res.AssetManager;
 import android.service.autofill.Dataset;
 import android.util.Log;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import weka.classifiers.Classifier;
 import weka.core.Attribute;
@@ -26,12 +28,11 @@ public class ClassifyActivity {
     float acc1, acc2, acc3, gyr1, gyr2, gyr3, mgf1, mgf2, mgf3;
     boolean running = true;
     ArrayList<Attribute> fvWekaAttributes;
-    private final String[] activity = {"Falling", "Running","Sitting", "Playing", "Fighting", "Walking"};
     Instances instances;
     Instance instance;
-    HashMap<Integer,Integer> readings = new HashMap<>();
+    HashMap<Integer, Integer> readings = new HashMap<>();    // TODO array
     private final double[] activityWeights = {1, 1, 1, 1, 1, 1};
-    String current_state;
+    Activities current_state;
 
     private MainActivity context;
 
@@ -92,10 +93,10 @@ public class ClassifyActivity {
 
 
             // Get the prediction in int
-            prediction = (int)cls.classifyInstance(instance);
+            prediction = (int) cls.classifyInstance(instance);
             //System.out.println( "the prediction is: " + prediction);
             //System.out.println("the predicted activity is " + activity[prediction]);
-            this.context.setCurrentActivity(activity[prediction]);
+            this.context.setCurrentActivity(Activities.values()[prediction]);
 
             int count = 0;
             //System.out.println("does readings contain the key? " + this.readings.containsKey(prediction));
@@ -113,8 +114,7 @@ public class ClassifyActivity {
     }
 
 
-
-    public void createTrainingSet(){
+    public void createTrainingSet() {
 
         if (running) {
 
@@ -131,7 +131,7 @@ public class ClassifyActivity {
             Attribute Wrist_Mz = new Attribute("Wrist_Mz");
 
             ArrayList<String> acList = new ArrayList<>();
-            acList.addAll(Arrays.asList(activity));
+            for (Activities act : Activities.values()) acList.add(act.label);
             Attribute Activity = new Attribute("Activity", acList);
 
             fvWekaAttributes = new ArrayList<>(10);
@@ -154,31 +154,29 @@ public class ClassifyActivity {
         //ADD VALUES HERE FROM SENSORS
         acc1 = row[0];
         acc2 = row[1];
-        acc3 =row[2];
-        gyr1 =row[3];
-        gyr2 =row[4];
-        gyr3 =row[5];
-        mgf1 =row[6];
-        mgf2 =row[7];
-        mgf3 =row[8];
+        acc3 = row[2];
+        gyr1 = row[3];
+        gyr2 = row[4];
+        gyr3 = row[5];
+        mgf1 = row[6];
+        mgf2 = row[7];
+        mgf3 = row[8];
         //System.out.println("in put values " + Arrays.toString(row));
         activityPredict();
         getPredictedActivity();
     }
 
 
-
-    public int getActivityWithMostOccurrence(){
+    public int getActivityWithMostOccurrence() {
         //System.out.println("activity with most occurrence called");
         // Get the activity with the most occurrence
         double maxPredictionValue = 0;
         double weightedValue;
         int maxPredictionKey = 0;
-        for (Map.Entry<Integer, Integer> entry : readings.entrySet()){
+        for (Map.Entry<Integer, Integer> entry : readings.entrySet()) {
             weightedValue = (double) entry.getValue() * activityWeights[entry.getKey()];
 //            Log.d(TAG, "entry: " + entry.getKey() + " weighted value: " + weightedValue);
-            if (maxPredictionValue < entry.getValue())
-            {
+            if (maxPredictionValue < entry.getValue()) {
                 maxPredictionValue = weightedValue;
                 maxPredictionKey = entry.getKey();
             }
@@ -188,31 +186,31 @@ public class ClassifyActivity {
         return maxPredictionKey;
     }
 
-    public void getPredictedActivity(){
+    public void getPredictedActivity() {
         //System.out.println("get predicted activity is called");
         int sum = 0;
-        for (int v: readings.values()){
+        for (int v : readings.values()) {
             sum += v;
             //System.out.println(sum);
         }
 
         //Log.d(TAG, "Old activity: " + oldPredictionActivity);
         //if it reaches 150 readings
-        if (sum == 150){
+        if (sum == 150) {
             //System.out.println("reached sum == 150");
             int prediction = getActivityWithMostOccurrence();
-            current_state = activity[prediction];
+            current_state = Activities.values()[prediction];
             for (int i = 0; i < 6; i++) {
                 this.readings.put(i, 0);
             }
             //System.out.println("new readings =" + readings);
             //Log.d(TAG, current_state);
-            }
+        }
 
 
         //System.out.println("readings cleared");
 
-        }
+    }
 }
 
 

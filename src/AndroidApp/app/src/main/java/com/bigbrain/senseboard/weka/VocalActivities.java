@@ -1,14 +1,13 @@
 package com.bigbrain.senseboard.weka;
 
 public enum VocalActivities {
-    TALKING("Talking"),
-    SHOUTING("Shouting"),
     CRYING("Crying"),
-    SILENT("Silent"),
-    LAUGHING("Laughing");
+    LAUGHING("Laughing"),
+    SHOUTING("Shouting"),
+    TALKING("Talking"),
+    SILENT("Silent");
 
     public final String label;
-
     VocalActivities(String label) {
         this.label = label;
     }
