@@ -34,8 +34,7 @@ public class ClassifyActivity {
     private final double[] activityWeights = {1, 1, 1, 1, 1, 1};
     Activities current_state;
 
-    private MainActivity context;
-
+    private final MainActivity context;
 
     public ClassifyActivity(MainActivity act) {
         this.context = act;
@@ -96,7 +95,6 @@ public class ClassifyActivity {
             prediction = (int) cls.classifyInstance(instance);
             //System.out.println( "the prediction is: " + prediction);
             //System.out.println("the predicted activity is " + activity[prediction]);
-            this.context.setCurrentActivity(Activities.values()[prediction]);
 
             int count = 0;
             //System.out.println("does readings contain the key? " + this.readings.containsKey(prediction));
@@ -164,6 +162,8 @@ public class ClassifyActivity {
         //System.out.println("in put values " + Arrays.toString(row));
         activityPredict();
         getPredictedActivity();
+        this.context.setCurrentActivity(current_state);
+
     }
 
 
@@ -196,7 +196,8 @@ public class ClassifyActivity {
 
         //Log.d(TAG, "Old activity: " + oldPredictionActivity);
         //if it reaches 150 readings
-        if (sum == 150) {
+        if (sum == 25) {
+            Log.d("CLASSIFIER", "SUM REACHED");
             //System.out.println("reached sum == 150");
             int prediction = getActivityWithMostOccurrence();
             current_state = Activities.values()[prediction];

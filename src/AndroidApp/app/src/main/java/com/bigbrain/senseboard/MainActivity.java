@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setCurrentActivity(Activities activity) {
-        this.currentActivity.setText(activity.label);
+        this.currentActivity.setText(activity != null ? activity.label : "");
     }
 
     private void setupMAC() {
