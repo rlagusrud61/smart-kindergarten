@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText enterMAC;
     private Button buttonMAC;
+    private TextView currentActivity;
     private final long MEASUREMENT_DELAY = 3000;
 
     public MainActivity() {
@@ -101,9 +102,15 @@ public class MainActivity extends AppCompatActivity {
         this.time = findViewById(R.id.timerTextView);
         this.time.setText(formatTime(MEASUREMENT_DELAY));
 
+        this.currentActivity = findViewById(R.id.currentActivity);
+
         setupMAC();
 
 
+    }
+
+    public void setCurrentActivity(String activity) {
+        this.currentActivity.setText(activity);
     }
 
     private void setupMAC() {
