@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.bigbrain.senseboard.sensor.AudioHandler;
 import com.bigbrain.senseboard.sensor.AudioListener;
 import com.bigbrain.senseboard.sensor.AudioTester;
+import com.bigbrain.senseboard.sensor.BluetoothHandler;
 import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
@@ -44,24 +45,23 @@ public class MainActivity extends AppCompatActivity {
 
 //    private static final int PERMISSIONS_RECORD_AUDIO = 98;
 //    private static final int PERMISSIONS_BLUETOOTH = 99;
-    private final String apiCode;
 
     private SensorTracker st;
-    private AudioListener al;
+
     private BluetoothListener bl;
+    private BluetoothHandler bh;
+
+    private AudioListener al;
     private AudioHandler ah;
     private AudioTester at;
 
     private TextView time;
-
     private EditText enterMAC;
     private Button buttonMAC;
     private TextView currentActivity;
+
     private final long MEASUREMENT_DELAY = 3000;
 
-    public MainActivity() {
-        apiCode = RandomStringUtils.random(6, false, true);
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -212,9 +212,13 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupBluetoothListener() {
-        bl = new BluetoothListener(this, 12000); //60000
+        bh = new BluetoothHandler(this);
+
+        bl = new BluetoothListener(this, 12000, bh); //60000
 
         bl.start();
+
+
     }
 
     private void setupAudioTester() {

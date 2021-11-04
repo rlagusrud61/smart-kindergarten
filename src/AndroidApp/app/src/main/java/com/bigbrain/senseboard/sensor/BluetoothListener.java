@@ -24,12 +24,16 @@ public class BluetoothListener extends Thread {
     private final MainActivity context;
     private final BroadcastReceiver receiver;
     private final int pollingDelay;
-    private Collection<BluetoothDevice> devices;
+    private Collection<Intent> devices;
+
+    private BluetoothHandler bh;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public BluetoothListener(MainActivity context, int pollingDelay) {
+    public BluetoothListener(MainActivity context, int pollingDelay, BluetoothHandler bh) {
         this.context = context;
         this.pollingDelay = pollingDelay;
+        this.bh = bh;
+
         this.devices = Collections.synchronizedCollection(new ArrayList<>());
 
         this.receiver = new BroadcastReceiver() {
@@ -43,8 +47,10 @@ public class BluetoothListener extends Thread {
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     System.out.println(intent.getStringExtra(BluetoothDevice.EXTRA_NAME) + " : " + device.getAddress());
 
-                    if (!devices.contains(device)) {
-                        devices.add(intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
+                    if (!devices.contains(intent)) {
+                        devices.add(intent);
+//                        devices.add(intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
+
                     }
                 }
             }
@@ -70,8 +76,10 @@ public class BluetoothListener extends Thread {
         while (true) {
             long time = System.currentTimeMillis();
 
-            System.out.println("List " + devices);
-            System.out.println("MAC " + getMAC());
+//            System.out.println("List " + devices);
+//            System.out.println("MAC " + getMAC());
+            bh.putBluetoothData();
+
             devices.clear();
 
             discover();
@@ -95,7 +103,7 @@ public class BluetoothListener extends Thread {
      * Retreive the list of devices found in the most recent discovery cycle
      * @return list of BluetoothDevices found in last discovery cycle
      */
-    public List<BluetoothDevice> getDevices() {
+    public List<Intent> getIntents() {
         return new ArrayList<>(this.devices);
     }
 

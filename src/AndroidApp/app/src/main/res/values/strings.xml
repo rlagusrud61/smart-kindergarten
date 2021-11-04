@@ -3,4 +3,7 @@
     <string name="record">Record</string>
     <string name="recordingString">RECORDING</string>
     <string name="addressMAC">AddressMAC</string>
+    <string name="putBluetoothURL">/api/Bluetooth/{hardwareAddress}</string>
+    <string name="putActivityURL">/api/Students/Activity</string>
+    <string name="putVocalActivityURL">/api/Students/VocalActivity</string>
 </resources>
