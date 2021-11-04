@@ -26,6 +26,7 @@ import com.bigbrain.senseboard.sensor.AudioListener;
 import com.bigbrain.senseboard.sensor.AudioTester;
 import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
+import com.bigbrain.senseboard.util.ApiService;
 import com.bigbrain.senseboard.util.SensorSwitchHandler;
 import com.bigbrain.senseboard.util.TimerUtil;
 import com.bigbrain.senseboard.weka.Activities;
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private final long MEASUREMENT_DELAY = 3000;
 
     private RequestQueue volleyQueue;
+    private ApiService apiService;
     private final McWrap mcWrap = new McWrap();
-
 
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 //        setupAudioTester();
 
         volleyQueue = Volley.newRequestQueue(this);
+        apiService = new ApiService(volleyQueue, mcWrap);
 
         this.time = findViewById(R.id.timerTextView);
         this.time.setText(formatTime(MEASUREMENT_DELAY));
@@ -86,8 +88,15 @@ public class MainActivity extends AppCompatActivity {
         this.currentActivity = findViewById(R.id.currentActivity);
     }
 
+    /**
+     * Update in-app display and send to api
+     * @param activity classified activity
+     */
     public void setCurrentActivity(Activities activity) {
         this.currentActivity.setText(activity != null ? activity.label : "");
+
+        if(activity == null) return;
+        apiService.updateActivity(activity);
     }
 
     private void setupMAC() {

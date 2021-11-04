@@ -23,6 +23,7 @@ public class ApiService {
     }
 
     public void updateActivity(Activities activity) {
+        if(mcWrap.hardwareAddress == null) return;
         StringRequest request = new StringRequest(Request.Method.PUT,
                 String.format("%s?activity=%s&hardwareAddress=%s", ACTIVITY_URL, activity.name(), mcWrap.hardwareAddress),
                 response -> Log.i("VOLLEY", response), error -> Log.e("VOLLEY", error.toString())) {
@@ -31,6 +32,7 @@ public class ApiService {
     }
 
     public void updateVocalActivity(VocalActivities activity) {
+        if(mcWrap.hardwareAddress == null) return;
         StringRequest request = new StringRequest(Request.Method.PUT,
                 String.format("%s?activity=%s&hardwareAddress=%s", VOCAL_ACTIVITY_URL, activity.name(), mcWrap.hardwareAddress),
                 response -> Log.i("VOLLEY", response), error -> Log.e("VOLLEY", error.toString())) {
