@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using KindergartenApi.Models.DB;
+using Microsoft.AspNetCore.SignalR;
 
 namespace KindergartenApi.Hubs;
 
 public interface IStudentHub
 {
-    
+    Task ReceiveActivityUpdate(Activity activity);
+    Task ReceiveVocalActivityUpdate(VocalActivity activity);
 }
 
 public class StudentHub : Hub<IStudentHub>

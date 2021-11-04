@@ -16,18 +16,13 @@ export interface ActivityProviderProps {
 
 export const ActivityProvider = ({children}: ActivityProviderProps) => {
 
-    const hub = UseHub(ActivityHub)
+    const hub = UseHub(ActivityHub, [])
 
     useEffect(() => {
 
         hub?.urgentEventEvent.addHandler((history:EventHistory) => {
             ToastDefault("Urgent Event", GetUrgentEventMessage(history.student!,history.event!))
         })
-
-        // hub?.connect();
-        return function cleanup() {
-            hub?.disconnect();
-        }
     },[hub])
 
     const implementation: ActivityContextProperties = {

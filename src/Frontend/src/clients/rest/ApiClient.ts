@@ -378,101 +378,99 @@ export class StudentsClient extends ClientBase {
     }
 
     /**
-     * @param ownHardwareAddress (optional) 
+     * @param hardwareAddress (optional) 
      * @param activity (optional) 
      * @return Success
      */
-    updateActivity(ownHardwareAddress?: string | undefined, activity?: Activity | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Students/UpdateActivity?";
-        if (ownHardwareAddress === null)
-            throw new Error("The parameter 'ownHardwareAddress' cannot be null.");
-        else if (ownHardwareAddress !== undefined)
-            url_ += "ownHardwareAddress=" + encodeURIComponent("" + ownHardwareAddress) + "&";
-        if (activity === null)
-            throw new Error("The parameter 'activity' cannot be null.");
-        else if (activity !== undefined)
-            url_ += "activity=" + encodeURIComponent("" + activity) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "PUT",
-            headers: {
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateActivity(_response);
-        });
-    }
-
-    protected processUpdateActivity(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    /**
-     * @param ownHardwareAddress (optional) 
-     * @param activity (optional) 
-     * @return Success
-     */
-    updateVocalActivity(ownHardwareAddress?: string | undefined, activity?: VocalActivity | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Students/UpdateVocalActivity?";
-        if (ownHardwareAddress === null)
-            throw new Error("The parameter 'ownHardwareAddress' cannot be null.");
-        else if (ownHardwareAddress !== undefined)
-            url_ += "ownHardwareAddress=" + encodeURIComponent("" + ownHardwareAddress) + "&";
-        if (activity === null)
-            throw new Error("The parameter 'activity' cannot be null.");
-        else if (activity !== undefined)
-            url_ += "activity=" + encodeURIComponent("" + activity) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "PUT",
-            headers: {
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateVocalActivity(_response);
-        });
-    }
-
-    protected processUpdateVocalActivity(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(<any>null);
-    }
-
-    /**
-     * @param ownHardwareAddress (optional) 
-     * @return Success
-     */
-    activity(ownHardwareAddress?: string | undefined): Promise<Activity> {
+    activityPUT(hardwareAddress?: string | undefined, activity?: Activity | undefined): Promise<void> {
         let url_ = this.baseUrl + "/api/Students/Activity?";
-        if (ownHardwareAddress === null)
-            throw new Error("The parameter 'ownHardwareAddress' cannot be null.");
-        else if (ownHardwareAddress !== undefined)
-            url_ += "ownHardwareAddress=" + encodeURIComponent("" + ownHardwareAddress) + "&";
+        if (hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' cannot be null.");
+        else if (hardwareAddress !== undefined)
+            url_ += "hardwareAddress=" + encodeURIComponent("" + hardwareAddress) + "&";
+        if (activity === null)
+            throw new Error("The parameter 'activity' cannot be null.");
+        else if (activity !== undefined)
+            url_ += "activity=" + encodeURIComponent("" + activity) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "PUT",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processActivityPUT(_response);
+        });
+    }
+
+    protected processActivityPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    /**
+     * @param hardwareAddress (optional) 
+     * @param activity (optional) 
+     * @return Success
+     */
+    vocalActivityPUT(hardwareAddress?: string | undefined, activity?: VocalActivity | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Students/VocalActivity?";
+        if (hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' cannot be null.");
+        else if (hardwareAddress !== undefined)
+            url_ += "hardwareAddress=" + encodeURIComponent("" + hardwareAddress) + "&";
+        if (activity === null)
+            throw new Error("The parameter 'activity' cannot be null.");
+        else if (activity !== undefined)
+            url_ += "activity=" + encodeURIComponent("" + activity) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "PUT",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processVocalActivityPUT(_response);
+        });
+    }
+
+    protected processVocalActivityPUT(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    activityGET(hardwareAddress: string): Promise<Activity> {
+        let url_ = this.baseUrl + "/api/Students/Activity/{hardwareAddress}";
+        if (hardwareAddress === undefined || hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' must be defined.");
+        url_ = url_.replace("{hardwareAddress}", encodeURIComponent("" + hardwareAddress));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -483,11 +481,11 @@ export class StudentsClient extends ClientBase {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processActivity(_response);
+            return this.processActivityGET(_response);
         });
     }
 
-    protected processActivity(response: Response): Promise<Activity> {
+    protected processActivityGET(response: Response): Promise<Activity> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -505,15 +503,13 @@ export class StudentsClient extends ClientBase {
     }
 
     /**
-     * @param ownHardwareAddress (optional) 
      * @return Success
      */
-    vocalActivity(ownHardwareAddress?: string | undefined): Promise<VocalActivity> {
-        let url_ = this.baseUrl + "/api/Students/VocalActivity?";
-        if (ownHardwareAddress === null)
-            throw new Error("The parameter 'ownHardwareAddress' cannot be null.");
-        else if (ownHardwareAddress !== undefined)
-            url_ += "ownHardwareAddress=" + encodeURIComponent("" + ownHardwareAddress) + "&";
+    vocalActivityGET(hardwareAddress: string): Promise<VocalActivity> {
+        let url_ = this.baseUrl + "/api/Students/VocalActivity/{hardwareAddress}";
+        if (hardwareAddress === undefined || hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' must be defined.");
+        url_ = url_.replace("{hardwareAddress}", encodeURIComponent("" + hardwareAddress));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -524,11 +520,11 @@ export class StudentsClient extends ClientBase {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processVocalActivity(_response);
+            return this.processVocalActivityGET(_response);
         });
     }
 
-    protected processVocalActivity(response: Response): Promise<VocalActivity> {
+    protected processVocalActivityGET(response: Response): Promise<VocalActivity> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {

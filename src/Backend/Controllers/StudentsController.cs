@@ -15,11 +15,15 @@ public class StudentsController : ControllerBase
     private readonly GartenContext _context;
     private readonly HistoryService _history;
     private readonly IHubContext<ActivityHub, IActivityHub> _activityHub;
+    private readonly IHubContext<StudentHub, IStudentHub> _studentHub;
 
-    public StudentsController(GartenContext context, HistoryService history)
+    public StudentsController(GartenContext context, HistoryService history,
+        IHubContext<StudentHub, IStudentHub> studentHub, IHubContext<ActivityHub, IActivityHub> activityHub)
     {
         _context = context;
         _history = history;
+        _studentHub = studentHub;
+        _activityHub = activityHub;
     }
 
     [HttpGet]
@@ -47,23 +51,23 @@ public class StudentsController : ControllerBase
     {
         var student = await _context.Children.FirstOrDefaultAsync(m => m.DeviceHardwareAddress == hardwareAddress);
         if (student is null) return BadRequest("The provided hardware address does not belong to a known student");
-        
+
         _history.StudentActivity[student.Id] = activity;
-        _activityHub.Clients.All.ReceiveActivityUpdate(student.Id, activity);
+        _studentHub.Clients.Group(student.Id.ToString()).ReceiveActivityUpdate(activity);
         return Ok();
     }
-    
+
     [HttpPut("VocalActivity")]
     public async Task<IActionResult> UpdateVocalActivity(string hardwareAddress, VocalActivity activity)
     {
         var student = await _context.Children.FirstOrDefaultAsync(m => m.DeviceHardwareAddress == hardwareAddress);
         if (student is null) return BadRequest("The provided hardware address does not belong to a known student");
-        
+
         _history.StudentVocalActivity[student.Id] = activity;
-        _activityHub.Clients.All.ReceiveVocalActivityUpdate(student.Id, activity);
+        _studentHub.Clients.Group(student.Id.ToString()).ReceiveVocalActivityUpdate(activity);
         return Ok();
     }
-    
+
     [HttpGet("Activity/{hardwareAddress}")]
     public async Task<ActionResult<Activity?>> GetActivity(string hardwareAddress)
     {
@@ -71,13 +75,14 @@ public class StudentsController : ControllerBase
         if (student is null) return BadRequest("The provided hardware address does not belong to a known student");
         return Ok(_history.StudentActivity.ContainsKey(student.Id) ? _history.StudentActivity[student.Id] : null);
     }
-    
+
     [HttpGet("VocalActivity/{hardwareAddress}")]
     public async Task<ActionResult<VocalActivity?>> GetVocalActivity(string hardwareAddress)
     {
         var student = await _context.Children.FirstOrDefaultAsync(m => m.DeviceHardwareAddress == hardwareAddress);
         if (student is null) return BadRequest("The provided hardware address does not belong to a known student");
-        return Ok(_history.StudentVocalActivity.ContainsKey(student.Id) ? _history.StudentVocalActivity[student.Id] : null);
+        return Ok(_history.StudentVocalActivity.ContainsKey(student.Id)
+            ? _history.StudentVocalActivity[student.Id]
+            : null);
     }
-    
 }

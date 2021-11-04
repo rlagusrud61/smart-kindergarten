@@ -1,5 +1,5 @@
 import {HubConnectionBuilder, LogLevel} from "@microsoft/signalr";
-import {EventHistory, Student, UrgentEvent} from "../rest/ApiClient";
+import {EventHistory} from "../rest/ApiClient";
 import {Event} from "./Event"
 
 export interface IHubClient {
@@ -10,7 +10,7 @@ export interface IHubClient {
 export class ActivityHub {
 
     public readonly connection = new HubConnectionBuilder()
-        .withUrl(process.env["REACT_APP_API_URI"]+"/hubs/Activity")
+        .withUrl(process.env["REACT_APP_API_URI"] + "/hubs/Activity")
         .withAutomaticReconnect()
         .configureLogging(LogLevel.Warning)
         .build();
@@ -24,23 +24,22 @@ export class ActivityHub {
      */
     public urgentEventEvent = new Event();
 
-    private init(){
+    private init() {
         this.connection.onclose(async () => {
             // We don't do closing where I'm from
             console.warn("SignalR connection was closed");
-            // await this.connect();
         });
 
-        this.connection.on("ReceiveUrgentEvent", (history:EventHistory) => {
+        this.connection.on("ReceiveUrgentEvent", (history: EventHistory) => {
             this.urgentEventEvent.fire(history);
         });
     }
 
-    public async connect(){
+    public async connect() {
         await this.connection.start();
     }
 
-    public async disconnect(){
+    public async disconnect() {
         await this.connection.stop();
     }
 }
