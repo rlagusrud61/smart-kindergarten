@@ -32,14 +32,6 @@ public class StudentsController : ControllerBase
         return Ok(_context.Children.OrderBy(m => m.Name).AsAsyncEnumerable());
     }
 
-    // [HttpPost(Name = "AddStudent")]
-    // public async Task<IActionResult> AddStudent(Student stu)
-    // {
-    //     _context.Add(stu);
-    //     await _context.SaveChangesAsync();
-    //     return Ok();
-    // }
-
     /// <summary>
     /// Update a student's current activity
     /// </summary>

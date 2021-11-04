@@ -28,8 +28,7 @@ public class BluetoothController : ControllerBase
     }
 
     [HttpPut("{hardwareAddress}")]
-    public async Task<IActionResult> UpdateNearbyDevices(string hardwareAddress,
-        List<NearbyBluetooth> nearbyDevices) // very secure yesyes
+    public async Task<IActionResult> UpdateNearbyDevices(string hardwareAddress, List<NearbyBluetooth> nearbyDevices) // very secure yesyes
     {
         Logger.LogInformation("Received bluetooth update from {HardwareAddress}: {NearbyDevices}", hardwareAddress,
             string.Join('\n', nearbyDevices.Select(m => $"Device {m.HardwareAddress} ({m.Name}): RSSI {m.Rssi}")));

@@ -31,19 +31,36 @@ public class DebugController : ControllerBase
         if (student is null)
             return BadRequest();
 
-        await _activityHub.Clients.All.ReceiveUrgentEvent(new EventHistory {Student = student, Event = @event});
+        await _activityHub.Clients.All.ReceiveUrgentEvent(new EventHistory { Student = student, Event = @event });
+        return Ok();
+    }
+
+    [HttpPost("AddStudent", Name = "AddStudent")]
+    public async Task<IActionResult> AddStudent(Student stu)
+    {
+        _context.Add(stu);
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+
+    [HttpPut("SetHardwareAddress", Name = "SetHardwareAddress")]
+    public async Task<IActionResult> SetStudentHardwareAddress(Guid id, string hardwareAddress)
+    {
+        var student = await _context.Children.FirstOrDefaultAsync(m => m.Id == id);
+        if (student == null) return BadRequest("Invalid student id");
+        student.DeviceHardwareAddress = hardwareAddress;
+        _context.Update(student);
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+    [HttpDelete("DeleteStudent", Name = "DeleteStudent")]
+    public async Task<IActionResult> DeleteStudent(Guid id)
+    {
+        var student = await _context.Children.FirstOrDefaultAsync(m => m.Id == id);
+        if (student == null) return BadRequest("Invalid student id");
+        _context.Remove(student);
+        await _context.SaveChangesAsync();
         return Ok();
     }
     
-    [HttpPut("SetVocalActivity")]
-    public async Task<IActionResult> SetVocalActivity(Guid studentId, UrgentEvent @event)
-    {
-        throw new NotImplementedException();
-    }
-    
-    [HttpPut("SetActivity")]
-    public async Task<IActionResult> SetActivity(Guid studentId, UrgentEvent @event)
-    {
-        throw new NotImplementedException();
-    }
 }
