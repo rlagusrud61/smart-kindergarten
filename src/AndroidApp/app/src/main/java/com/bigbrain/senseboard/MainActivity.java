@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText enterMAC;
     private Button buttonMAC;
     private TextView currentActivity;
-    private final long MEASUREMENT_DELAY = 3000;
+    private final long MEASUREMENT_DELAY = 1000;
 
     private RequestQueue volleyQueue;
     private ApiService apiService;
@@ -72,12 +72,12 @@ public class MainActivity extends AppCompatActivity {
                 , Permissions.PERMISSION_RECORD_AUDIO);
 
 
-        setupSensorTracker();
+        //setupSensorTracker();
         setupSwitches();
         setupAudio();
         setupAudioHandler();
         setupMAC();
-//        setupAudioTester();
+        setupAudioTester();
 
         volleyQueue = Volley.newRequestQueue(this);
         apiService = new ApiService(volleyQueue, mcWrap);
@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupAudioHandler() {
-        ah = new AudioHandler(250, this);
+        ah = new AudioHandler(16000, this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupAudioTester() {
-        at = new AudioTester(ah, al, 1000);
+        at = new AudioTester(ah, al, 20);
         at.start();
     }
 
