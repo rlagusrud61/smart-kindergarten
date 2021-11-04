@@ -1,18 +1,21 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {useEffect, useState} from "react";
 import {IHubClient} from "../clients/signalr/ActivityHub";
 
-export function UseHub<T extends IHubClient>(hubType: new () => T): T | undefined {
+export function UseHub<T extends IHubClient>(hubType: new (...args: any) => T, deps: any[], ...params: any[]): T | undefined {
 
     const [hub, setHub] = useState<T>();
 
     useEffect(() => {
-        if (hub) {
-            return;
-        }
-        const hb = new hubType();
+        const hb = new hubType(...params);
         setHub(hb);
-        hb.connect();
-    }, [hubType, hub])
+
+        hb?.connect();
+
+        return () => {
+            hb?.disconnect();
+        }
+    }, [hubType, ...deps])
 
     return hub;
 }

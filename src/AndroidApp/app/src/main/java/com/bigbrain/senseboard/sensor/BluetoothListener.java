@@ -12,29 +12,27 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.bigbrain.senseboard.MainActivity;
+import com.bigbrain.senseboard.NearbyDevice;
 import com.bigbrain.senseboard.R;
+import com.bigbrain.senseboard.util.ApiService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BluetoothListener extends Thread {
     private final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private final MainActivity context;
     private final BroadcastReceiver receiver;
     private final int pollingDelay;
-    private Collection<Intent> devices;
+    private final Map<String, NearbyDevice> devices = new HashMap<>();
 
-    private BluetoothHandler bh;
+    private final ApiService apiService;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public BluetoothListener(MainActivity context, int pollingDelay, BluetoothHandler bh) {
+    public BluetoothListener(MainActivity context, int pollingDelay, ApiService apiService) {
         this.context = context;
         this.pollingDelay = pollingDelay;
-        this.bh = bh;
-
-        this.devices = Collections.synchronizedCollection(new ArrayList<>());
+        this.apiService = apiService;
 
         this.receiver = new BroadcastReceiver() {
             @Override
@@ -46,11 +44,8 @@ public class BluetoothListener extends Thread {
 
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     System.out.println(intent.getStringExtra(BluetoothDevice.EXTRA_NAME) + " : " + device.getAddress());
-
-                    if (!devices.contains(intent)) {
-                        devices.add(intent);
-//                        devices.add(intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE));
-
+                    if (!devices.containsKey(device.getAddress())) {
+                        devices.put(device.getAddress(), NearbyDevice.fromBluetoothIntent(intent));
                     }
                 }
             }
@@ -76,10 +71,10 @@ public class BluetoothListener extends Thread {
         while (true) {
             long time = System.currentTimeMillis();
 
-//            System.out.println("List " + devices);
-//            System.out.println("MAC " + getMAC());
-            bh.putBluetoothData();
+            System.out.println("List " + devices);
+            System.out.println("MAC " + getMAC());
 
+            apiService.updateNearbyDevices(devices.values());
             devices.clear();
 
             discover();
@@ -100,13 +95,13 @@ public class BluetoothListener extends Thread {
     }
 
     /**
-     * Retreive the list of devices found in the most recent discovery cycle
+     * Retrieve the list of devices found in the most recent discovery cycle
+     *
      * @return list of BluetoothDevices found in last discovery cycle
      */
-    public List<Intent> getIntents() {
-        return new ArrayList<>(this.devices);
+    public HashMap<String, NearbyDevice> getDevices() {
+        return new HashMap<>(this.devices);
     }
-
 
     /**
      * Unregister the BroadcastReceiver

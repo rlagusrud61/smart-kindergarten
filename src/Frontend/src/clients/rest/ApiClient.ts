@@ -9,6 +9,138 @@
 
 import ClientBase from "./base/ClientBase";
 
+export class BluetoothClient extends ClientBase {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
+        this.http = http ? http : <any>window;
+        this.baseUrl = this.getBaseUrl("", baseUrl);
+    }
+
+    /**
+     * @param ownHardwareAddress (optional) 
+     * @param body (optional) 
+     * @return Success
+     */
+    bluetooth(ownHardwareAddress?: string | undefined, body?: NearbyBluetooth[] | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Bluetooth?";
+        if (ownHardwareAddress === null)
+            throw new Error("The parameter 'ownHardwareAddress' cannot be null.");
+        else if (ownHardwareAddress !== undefined)
+            url_ += "ownHardwareAddress=" + encodeURIComponent("" + ownHardwareAddress) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ = <RequestInit>{
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processBluetooth(_response);
+        });
+    }
+
+    protected processBluetooth(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    /**
+     * @param hardwareAddress (optional) 
+     * @return Success
+     */
+    studentProximities(hardwareAddress?: string | undefined): Promise<NearbyBluetooth[]> {
+        let url_ = this.baseUrl + "/api/Bluetooth/StudentProximities?";
+        if (hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' cannot be null.");
+        else if (hardwareAddress !== undefined)
+            url_ += "hardwareAddress=" + encodeURIComponent("" + hardwareAddress) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processStudentProximities(_response);
+        });
+    }
+
+    protected processStudentProximities(response: Response): Promise<NearbyBluetooth[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <NearbyBluetooth[]>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<NearbyBluetooth[]>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    allProximities(): Promise<{ [key: string]: NearbyBluetooth[]; }> {
+        let url_ = this.baseUrl + "/api/Bluetooth/AllProximities";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAllProximities(_response);
+        });
+    }
+
+    protected processAllProximities(response: Response): Promise<{ [key: string]: NearbyBluetooth[]; }> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <{ [key: string]: NearbyBluetooth[]; }>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<{ [key: string]: NearbyBluetooth[]; }>(<any>null);
+    }
+}
+
 export class ClassroomClient extends ClientBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -110,6 +242,92 @@ export class DebugClient extends ClientBase {
         }
         return Promise.resolve<void>(<any>null);
     }
+
+    /**
+     * @param studentId (optional) 
+     * @param event (optional) 
+     * @return Success
+     */
+    setVocalActivity(studentId?: string | undefined, event?: UrgentEvent | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Debug/SetVocalActivity?";
+        if (studentId === null)
+            throw new Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
+        if (event === null)
+            throw new Error("The parameter 'event' cannot be null.");
+        else if (event !== undefined)
+            url_ += "event=" + encodeURIComponent("" + event) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "PUT",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSetVocalActivity(_response);
+        });
+    }
+
+    protected processSetVocalActivity(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    /**
+     * @param studentId (optional) 
+     * @param event (optional) 
+     * @return Success
+     */
+    setActivity(studentId?: string | undefined, event?: UrgentEvent | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Debug/SetActivity?";
+        if (studentId === null)
+            throw new Error("The parameter 'studentId' cannot be null.");
+        else if (studentId !== undefined)
+            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
+        if (event === null)
+            throw new Error("The parameter 'event' cannot be null.");
+        else if (event !== undefined)
+            url_ += "event=" + encodeURIComponent("" + event) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "PUT",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSetActivity(_response);
+        });
+    }
+
+    protected processSetActivity(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
 }
 
 export class StudentsClient extends ClientBase {
@@ -160,29 +378,34 @@ export class StudentsClient extends ClientBase {
     }
 
     /**
-     * @param body (optional) 
+     * @param hardwareAddress (optional) 
+     * @param activity (optional) 
      * @return Success
      */
-    addStudent(body?: Student | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Students";
+    activityPUT(hardwareAddress?: string | undefined, activity?: Activity | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Students/Activity?";
+        if (hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' cannot be null.");
+        else if (hardwareAddress !== undefined)
+            url_ += "hardwareAddress=" + encodeURIComponent("" + hardwareAddress) + "&";
+        if (activity === null)
+            throw new Error("The parameter 'activity' cannot be null.");
+        else if (activity !== undefined)
+            url_ += "activity=" + encodeURIComponent("" + activity) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
+            method: "PUT",
             headers: {
-                "Content-Type": "application/json",
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processAddStudent(_response);
+            return this.processActivityPUT(_response);
         });
     }
 
-    protected processAddStudent(response: Response): Promise<void> {
+    protected processActivityPUT(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -195,49 +418,37 @@ export class StudentsClient extends ClientBase {
             });
         }
         return Promise.resolve<void>(<any>null);
-    }
-}
-
-export class StudentUploadClient extends ClientBase {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        super();
-        this.http = http ? http : <any>window;
-        this.baseUrl = this.getBaseUrl("", baseUrl);
     }
 
     /**
-     * @param ownMac (optional) 
-     * @param body (optional) 
+     * @param hardwareAddress (optional) 
+     * @param activity (optional) 
      * @return Success
      */
-    studentUpload(ownMac?: string | undefined, body?: NearbyBluetooth[] | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/StudentUpload?";
-        if (ownMac === null)
-            throw new Error("The parameter 'ownMac' cannot be null.");
-        else if (ownMac !== undefined)
-            url_ += "ownMac=" + encodeURIComponent("" + ownMac) + "&";
+    vocalActivityPUT(hardwareAddress?: string | undefined, activity?: VocalActivity | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Students/VocalActivity?";
+        if (hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' cannot be null.");
+        else if (hardwareAddress !== undefined)
+            url_ += "hardwareAddress=" + encodeURIComponent("" + hardwareAddress) + "&";
+        if (activity === null)
+            throw new Error("The parameter 'activity' cannot be null.");
+        else if (activity !== undefined)
+            url_ += "activity=" + encodeURIComponent("" + activity) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
+            method: "PUT",
             headers: {
-                "Content-Type": "application/json",
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processStudentUpload(_response);
+            return this.processVocalActivityPUT(_response);
         });
     }
 
-    protected processStudentUpload(response: Response): Promise<void> {
+    protected processVocalActivityPUT(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -251,6 +462,93 @@ export class StudentUploadClient extends ClientBase {
         }
         return Promise.resolve<void>(<any>null);
     }
+
+    /**
+     * @return Success
+     */
+    activityGET(hardwareAddress: string): Promise<Activity> {
+        let url_ = this.baseUrl + "/api/Students/Activity/{hardwareAddress}";
+        if (hardwareAddress === undefined || hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' must be defined.");
+        url_ = url_.replace("{hardwareAddress}", encodeURIComponent("" + hardwareAddress));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processActivityGET(_response);
+        });
+    }
+
+    protected processActivityGET(response: Response): Promise<Activity> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <Activity>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Activity>(<any>null);
+    }
+
+    /**
+     * @return Success
+     */
+    vocalActivityGET(hardwareAddress: string): Promise<VocalActivity> {
+        let url_ = this.baseUrl + "/api/Students/VocalActivity/{hardwareAddress}";
+        if (hardwareAddress === undefined || hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' must be defined.");
+        url_ = url_.replace("{hardwareAddress}", encodeURIComponent("" + hardwareAddress));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processVocalActivityGET(_response);
+        });
+    }
+
+    protected processVocalActivityGET(response: Response): Promise<VocalActivity> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : <VocalActivity>JSON.parse(_responseText, this.jsonParseReviver);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<VocalActivity>(<any>null);
+    }
+}
+
+export enum Activity {
+    Sitting = "Sitting",
+    Walking = "Walking",
+    Running = "Running",
+    Playing = "Playing",
+    Fighting = "Fighting",
+    Falling = "Falling",
 }
 
 export interface EventHistory {
@@ -284,6 +582,14 @@ export enum UrgentEvent {
     Crying = "Crying",
     PeePeePooPoo = "PeePeePooPoo",
     Dying = "Dying",
+}
+
+export enum VocalActivity {
+    Talking = "Talking",
+    Shouting = "Shouting",
+    Crying = "Crying",
+    Silent = "Silent",
+    Laughing = "Laughing",
 }
 
 export class ApiException extends Error {

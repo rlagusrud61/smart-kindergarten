@@ -37,7 +37,7 @@ import weka.filters.SupervisedFilter;
  *
  * <!-- options-end -->
  *
- * @author César Soto (csoto@uclv.edu.cu)
+ * @author Cesar Soto (csoto@uclv.edu.cu)
  *
  */
 public class NumerosityReduction extends Filter implements SupervisedFilter, OptionHandler {

@@ -1,12 +1,13 @@
 package com.bigbrain.senseboard.weka;
 
 public enum Activities {
-    SITTING("Sitting"),
-    WALKING("Walking"),
-    RUNNING("Running"),
     PLAYING("Playing"),
+    RUNNING("Running"),
+    WALKING("Walking"),
     FIGHTING("Fighting"),
-    FALLING("Falling");
+    SITTING("Sitting"),
+    FALLING("Falling"),
+        ;
 
     public final String label;
 

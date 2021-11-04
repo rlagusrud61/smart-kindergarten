@@ -4,7 +4,7 @@ import {Disclosure, Menu, Transition} from '@headlessui/react';
 import {Link} from "react-router-dom";
 import {Toggle} from "../theme/Toggle";
 
-function classNames(...classes:any) {
+function classNames(...classes: any) {
     return classes.filter(Boolean).join(' ')
 }
 
@@ -15,33 +15,34 @@ const user = {
         'img/kidlmao.jpg',
 }
 const navigation = [
-    { name: 'Dashboard', href: '/', current: true },
-    { name: 'History', href: '/History', current: false },
+    {name: 'Dashboard', href: '/', current: true},
+    {name: 'History', href: '/History', current: false},
 
 ]
 
 const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    {name: 'Your Profile', href: '#'},
+    {name: 'Settings', href: '#'},
+    {name: 'Sign out', href: '#'},
 ]
 export const TopNav = () => {
     return (
 
-        <div className="min-h-full">
+        <div className="">
             <Disclosure as="nav" className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
-                {({ open }) => (
+                {({open}) => (
                     <>
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="flex items-center justify-between h-16">
                                 <div className="flex items-center">
                                     <div className="flex-shrink-0">
-                                       <h1 className="text-sm text-white rand-logo text-2xl font-bold px-5">Smart Kindergarten &trade;</h1>
+                                        <h1 className="text-sm text-white rand-logo text-2xl font-bold px-5">Smart Kindergarten &trade;</h1>
                                     </div>
                                     <div className="hidden md:block">
                                         <div className="ml-10 flex items-baseline space-x-4">
                                             {navigation.map((item) => (
-                                                <a
+                                                <Link
+                                                    to={item.href}
                                                     key={item.name}
                                                     className={classNames(
                                                         item.current
@@ -50,10 +51,9 @@ export const TopNav = () => {
                                                         'px-3 py-2 rounded-md text-sm font-medium'
                                                     )}
                                                     aria-current={item.current ? 'page' : undefined}
-                                                ><Link to={item.href}>
+                                                >
                                                     {item.name}
                                                 </Link>
-                                                </a>
                                             ))}
                                         </div>
                                     </div>
@@ -66,7 +66,7 @@ export const TopNav = () => {
                                             <div className="flex flex-row">
                                                 <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                                     <span className="sr-only">Open user menu</span>
-                                                    <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" />
+                                                    <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt=""/>
                                                 </Menu.Button>
 
                                             </div>
@@ -82,7 +82,7 @@ export const TopNav = () => {
                                                 <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                                                     {userNavigation.map((item) => (
                                                         <Menu.Item key={item.name}>
-                                                            {({ active }) => (
+                                                            {({active}) => (
                                                                 <a
                                                                     href={item.href}
                                                                     className={classNames(
@@ -106,9 +106,9 @@ export const TopNav = () => {
                                     <Disclosure.Button className="bg-white bg-opacity-90 items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                                         <span className="sr-only">Open main menu</span>
                                         {open ? (
-                                            <Dismiss12Filled className="block h-6 w-6" aria-hidden="true" />
+                                            <Dismiss12Filled className="block h-6 w-6" aria-hidden="true"/>
                                         ) : (
-                                            <LineHorizontal3Filled className="block h-6 w-6" aria-hidden="true" />
+                                            <LineHorizontal3Filled className="block h-6 w-6" aria-hidden="true"/>
                                         )}
                                     </Disclosure.Button>
                                 </div>
@@ -135,14 +135,14 @@ export const TopNav = () => {
                             <div className="pt-4 pb-3 border-t border-white">
                                 <div className="flex items-center px-5">
                                     <div className="flex-shrink-0">
-                                        <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt="" />
+                                        <img className="h-10 w-10 rounded-full" src={user.imageUrl} alt=""/>
                                     </div>
                                     <div className="ml-3">
                                         <div className="text-base font-medium leading-none text-white">{user.name}</div>
                                         <div className="text-sm font-medium leading-none text-white">{user.email}</div>
                                     </div>
                                     <div className="ml-3 flex-shrink-0">
-                                    <Toggle/>
+                                        <Toggle/>
                                     </div>
                                 </div>
                                 <div className="mt-3 px-2 space-y-1">
@@ -166,15 +166,15 @@ export const TopNav = () => {
 
         </div>
 
-    // <div className="z-10 fixed w-full h-16 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white justify-between flex flex-row items-center">
-    //     <div className="md:text-xs brand-logo text-2xl font-bold px-5">Smart Kindergarten &trade;</div>
-    //     <ul className="flex flex-row px-5 justify-center items-center">
-    //         <li className="px-5 "><Link to="/">Home</Link></li>
-    //         <li className="px-5 "><Link to="/History">History</Link></li>
-    //         <li className="px-5">
-    //             <Toggle/>
-    //         </li>
-    //     </ul>
-    // </div>
-        );
+        // <div className="z-10 fixed w-full h-16 bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-white justify-between flex flex-row items-center">
+        //     <div className="md:text-xs brand-logo text-2xl font-bold px-5">Smart Kindergarten &trade;</div>
+        //     <ul className="flex flex-row px-5 justify-center items-center">
+        //         <li className="px-5 "><Link to="/">Home</Link></li>
+        //         <li className="px-5 "><Link to="/History">History</Link></li>
+        //         <li className="px-5">
+        //             <Toggle/>
+        //         </li>
+        //     </ul>
+        // </div>
+    );
 }
