@@ -36,7 +36,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static final int PERMISSIONS_RECORD_AUDIO = 98;
+    //    private static final int PERMISSIONS_RECORD_AUDIO = 98;
 //    private static final int PERMISSIONS_BLUETOOTH = 99;
     private final String apiCode;
 
@@ -90,12 +90,13 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Update in-app display and send to api
+     *
      * @param activity classified activity
      */
     public void setCurrentActivity(Activities activity) {
         this.currentActivity.setText(activity != null ? activity.label : "");
 
-        if(activity == null) return;
+        if (activity == null) return;
         apiService.updateActivity(activity);
     }
 
@@ -200,8 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupBluetoothListener() {
-        bl = new BluetoothListener(this, 12000); //60000
-
+        bl = new BluetoothListener(this, 12000, apiService); // 60000
         bl.start();
     }
 

@@ -27,11 +27,14 @@ public class BluetoothController : ControllerBase
         _history = history;
     }
 
-    [HttpPut]
-    public async Task<IActionResult> UpdateNearbyDevices(string ownHardwareAddress,
+    [HttpPut("{hardwareAddress}")]
+    public async Task<IActionResult> UpdateNearbyDevices(string hardwareAddress,
         List<NearbyBluetooth> nearbyDevices) // very secure yesyes
     {
-        var student = await _context.Children.FirstOrDefaultAsync(m => m.DeviceHardwareAddress == ownHardwareAddress);
+        Logger.LogInformation("Received bluetooth update from {HardwareAddress}: {NearbyDevices}", hardwareAddress,
+            string.Join('\n', nearbyDevices.Select(m => $"Device {m.HardwareAddress} ({m.Name}): RSSI {m.Rssi}")));
+
+        var student = await _context.Children.FirstOrDefaultAsync(m => m.DeviceHardwareAddress == hardwareAddress);
         if (student is null) return BadRequest("The provided hardware address does not belong to a known student");
 
         // var previousDevices = context get recent
@@ -53,14 +56,14 @@ public class BluetoothController : ControllerBase
             var nearbyStudent =
                 await _context.Children.FirstOrDefaultAsync(m => m.DeviceHardwareAddress == nearby.HardwareAddress);
             if (nearbyStudent is null) continue;
-            
+
             var nearbyStudentsProximity = _history.StudentProximity.ContainsKey(nearbyStudent.Id)
                 ? _history.StudentProximity[nearbyStudent.Id]
                 : null;
             if (nearbyStudentsProximity is null) continue;
-            if(nearbyStudentsProximity.Any(m => m.Rssi < -50)) continue;
+            if (nearbyStudentsProximity.Any(m => m.Rssi < -50)) continue;
             // Both are nearby
-            
+
             actuallyMutuallyNearbyStudents.Add(nearbyStudent);
         }
 
@@ -74,7 +77,7 @@ public class BluetoothController : ControllerBase
         // Note: while there will likely be groups with all mutual connections, not everyone within the group has to be connected only to this group,
         // they could branch of to other nearby groups. The visualisation would be most representative as a tree/web/nodes
 
-        await _hubContext.Clients.All.UpdateDeviceProximity(ownHardwareAddress, nearbyDevices);
+        await _hubContext.Clients.All.UpdateDeviceProximity(hardwareAddress, nearbyDevices);
 
         return Ok();
     }
