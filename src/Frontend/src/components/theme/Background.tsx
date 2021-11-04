@@ -1,8 +1,8 @@
 export const Background = ({children} :any) => {
     return (
         // Remove transition-all to disable the background color transition.
-        <body className="bg-white dark:bg-gray-800 transition-all">
+        <div className="bg-white dark:bg-gray-800 transition-all min-h-screen">
         {children}
-        </body>
+        </div>
     )
 }

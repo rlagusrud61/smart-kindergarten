@@ -26,13 +26,13 @@ export const Layout = () => {
                         <>
                             <ThemeProvider initialTheme={"light"}>
                                 <Background>
-                            <TopNav/>
-                            <ToastContainer {...toastProps} />
-                            <Suspense fallback={<></>}>
-                                <main role="main">
-                                    {route.element}
-                                </main>
-                            </Suspense>
+                                    <TopNav/>
+                                    <ToastContainer {...toastProps} />
+                                    <Suspense fallback={<></>}>
+                                        <main role="main">
+                                            {route.element}
+                                        </main>
+                                    </Suspense>
                                 </Background>
                             </ThemeProvider>
                         </>}
