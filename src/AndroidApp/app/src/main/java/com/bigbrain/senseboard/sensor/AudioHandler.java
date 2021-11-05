@@ -32,7 +32,7 @@ public class AudioHandler extends Thread {
 
     private final int pollingDelay;
     private String[] sounds = {"loud sound", "talking", "silent"};
-    private int[] resultCount = {0,0,0};
+    private int[] resultCount = new int[3];
     private double[] weights = {1, 1, 1};
     private long timeTaken = 0;
     private int lastResult = -1;
@@ -82,14 +82,14 @@ public class AudioHandler extends Thread {
             short[] data = al.readBuffer(bufferSize);
             //System.out.println("data size: " + data.length + ", last entry: " + data[15999]);
 
-            double result = classifyExperimental(data);
+            int result = classifyExperimental(data);
 
-            resultCount[(int) result] += 1;
+            resultCount[result] += 1;
 
             if(resultSum() >=resultAmount){
-                System.out.println("time taken: " + (System.currentTimeMillis()-timeTaken)+ "\n");
+                //System.out.println("time taken: " + (System.currentTimeMillis()-timeTaken)+ "\n");
                 determineAverageSound();
-                resultCount = new int[]{0, 0, 0, 0};
+                resultCount = new int[3];
                 timeTaken = System.currentTimeMillis();
             }
 
@@ -164,7 +164,7 @@ public class AudioHandler extends Thread {
     }
  */
 
-    double classifyExperimental(short[] input){
+    int classifyExperimental(short[] input){
         short max = maxValue(input);
         //System.out.println("max: " + max);
 
@@ -253,6 +253,7 @@ public class AudioHandler extends Thread {
     void determineAverageSound(){
         double max = 0;
         int bestSound = -1;
+        //System.out.println("weights length: " + weights.length + " , resultcount.length: " + resultCount.length);
         for(int i=0; i<resultCount.length; i++){
             if((double)resultCount[i]*weights[i]>max){
                 max = resultCount[i]*weights[i];
@@ -262,7 +263,7 @@ public class AudioHandler extends Thread {
         }
         lastResult = bestSound;
         System.out.println("average sound: " + sounds[bestSound]);
-        System.out.println("resultCount" + Arrays.toString(resultCount));
+        //System.out.println("resultCount" + Arrays.toString(resultCount));
     }
 
     int getLastResult(){
