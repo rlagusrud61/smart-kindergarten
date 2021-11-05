@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {ActivityHub} from "../clients/signalr/ActivityHub";
-import {UseHub} from "../Hooks/HubHooks";
+import {useHub} from "../Hooks/HubHooks";
 import {ToastDark, ToastDefault} from "../utils/ToastUtil";
 import {EventHistory, Student, UrgentEvent} from "../clients/rest/ApiClient";
 
@@ -16,7 +16,7 @@ export interface ActivityProviderProps {
 
 export const ActivityProvider = ({children}: ActivityProviderProps) => {
 
-    const hub = UseHub(ActivityHub, [])
+    const hub = useHub(ActivityHub, [])
 
     useEffect(() => {
 

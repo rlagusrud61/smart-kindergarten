@@ -4,3 +4,18 @@
 .scrollbar{
   @include scrollbar;
 }
+
+main{
+  height: 100%;
+}
+
+div.page-content{
+  display: grid;
+  grid-template-rows: 4rem 1fr;
+  height: 100vh;
+  //max-height: 100vh;
+}
+
+.Toastify{
+  position: absolute;
+}

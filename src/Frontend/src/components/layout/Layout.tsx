@@ -29,9 +29,9 @@ export const Layout = () => {
                                     <TopNav/>
                                     <ToastContainer {...toastProps} />
                                     <Suspense fallback={<></>}>
-                                        <main role="main">
+                                        {/*<main role="main">*/}
                                             {route.element}
-                                        </main>
+                                        {/*</main>*/}
                                     </Suspense>
                                 </Background>
                             </ThemeProvider>

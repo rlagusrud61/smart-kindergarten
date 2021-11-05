@@ -21,16 +21,14 @@ export class BluetoothClient extends ClientBase {
     }
 
     /**
-     * @param ownHardwareAddress (optional) 
      * @param body (optional) 
      * @return Success
      */
-    bluetooth(ownHardwareAddress?: string | undefined, body?: NearbyBluetooth[] | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Bluetooth?";
-        if (ownHardwareAddress === null)
-            throw new Error("The parameter 'ownHardwareAddress' cannot be null.");
-        else if (ownHardwareAddress !== undefined)
-            url_ += "ownHardwareAddress=" + encodeURIComponent("" + ownHardwareAddress) + "&";
+    bluetooth(hardwareAddress: string, body?: NearbyBluetooth[] | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Bluetooth/{hardwareAddress}";
+        if (hardwareAddress === undefined || hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' must be defined.");
+        url_ = url_.replace("{hardwareAddress}", encodeURIComponent("" + hardwareAddress));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -67,7 +65,7 @@ export class BluetoothClient extends ClientBase {
      * @param hardwareAddress (optional) 
      * @return Success
      */
-    studentProximities(hardwareAddress?: string | undefined): Promise<NearbyBluetooth[]> {
+    studentProximities(hardwareAddress?: string | undefined): Promise<string[]> {
         let url_ = this.baseUrl + "/api/Bluetooth/StudentProximities?";
         if (hardwareAddress === null)
             throw new Error("The parameter 'hardwareAddress' cannot be null.");
@@ -87,13 +85,13 @@ export class BluetoothClient extends ClientBase {
         });
     }
 
-    protected processStudentProximities(response: Response): Promise<NearbyBluetooth[]> {
+    protected processStudentProximities(response: Response): Promise<string[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <NearbyBluetooth[]>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <string[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -101,13 +99,13 @@ export class BluetoothClient extends ClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<NearbyBluetooth[]>(<any>null);
+        return Promise.resolve<string[]>(<any>null);
     }
 
     /**
      * @return Success
      */
-    allProximities(): Promise<{ [key: string]: NearbyBluetooth[]; }> {
+    allProximities(): Promise<GuidGuidIEnumerableKeyValuePair[]> {
         let url_ = this.baseUrl + "/api/Bluetooth/AllProximities";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -123,13 +121,13 @@ export class BluetoothClient extends ClientBase {
         });
     }
 
-    protected processAllProximities(response: Response): Promise<{ [key: string]: NearbyBluetooth[]; }> {
+    protected processAllProximities(response: Response): Promise<GuidGuidIEnumerableKeyValuePair[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : <{ [key: string]: NearbyBluetooth[]; }>JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = _responseText === "" ? null : <GuidGuidIEnumerableKeyValuePair[]>JSON.parse(_responseText, this.jsonParseReviver);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -137,7 +135,7 @@ export class BluetoothClient extends ClientBase {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<{ [key: string]: NearbyBluetooth[]; }>(<any>null);
+        return Promise.resolve<GuidGuidIEnumerableKeyValuePair[]>(<any>null);
     }
 }
 
@@ -244,34 +242,29 @@ export class DebugClient extends ClientBase {
     }
 
     /**
-     * @param studentId (optional) 
-     * @param event (optional) 
+     * @param body (optional) 
      * @return Success
      */
-    setVocalActivity(studentId?: string | undefined, event?: UrgentEvent | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Debug/SetVocalActivity?";
-        if (studentId === null)
-            throw new Error("The parameter 'studentId' cannot be null.");
-        else if (studentId !== undefined)
-            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
-        if (event === null)
-            throw new Error("The parameter 'event' cannot be null.");
-        else if (event !== undefined)
-            url_ += "event=" + encodeURIComponent("" + event) + "&";
+    addStudent(body?: Student | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Debug/AddStudent";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ = <RequestInit>{
-            method: "PUT",
+            body: content_,
+            method: "POST",
             headers: {
+                "Content-Type": "application/json",
             }
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSetVocalActivity(_response);
+            return this.processAddStudent(_response);
         });
     }
 
-    protected processSetVocalActivity(response: Response): Promise<void> {
+    protected processAddStudent(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -287,20 +280,20 @@ export class DebugClient extends ClientBase {
     }
 
     /**
-     * @param studentId (optional) 
-     * @param event (optional) 
+     * @param id (optional) 
+     * @param hardwareAddress (optional) 
      * @return Success
      */
-    setActivity(studentId?: string | undefined, event?: UrgentEvent | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/api/Debug/SetActivity?";
-        if (studentId === null)
-            throw new Error("The parameter 'studentId' cannot be null.");
-        else if (studentId !== undefined)
-            url_ += "studentId=" + encodeURIComponent("" + studentId) + "&";
-        if (event === null)
-            throw new Error("The parameter 'event' cannot be null.");
-        else if (event !== undefined)
-            url_ += "event=" + encodeURIComponent("" + event) + "&";
+    setHardwareAddress(id?: string | undefined, hardwareAddress?: string | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Debug/SetHardwareAddress?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        if (hardwareAddress === null)
+            throw new Error("The parameter 'hardwareAddress' cannot be null.");
+        else if (hardwareAddress !== undefined)
+            url_ += "hardwareAddress=" + encodeURIComponent("" + hardwareAddress) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ = <RequestInit>{
@@ -310,11 +303,49 @@ export class DebugClient extends ClientBase {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSetActivity(_response);
+            return this.processSetHardwareAddress(_response);
         });
     }
 
-    protected processSetActivity(response: Response): Promise<void> {
+    protected processSetHardwareAddress(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(<any>null);
+    }
+
+    /**
+     * @param id (optional) 
+     * @return Success
+     */
+    deleteStudent(id?: string | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/api/Debug/DeleteStudent?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ = <RequestInit>{
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteStudent(_response);
+        });
+    }
+
+    protected processDeleteStudent(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -557,9 +588,15 @@ export interface EventHistory {
     date?: Date;
 }
 
+export interface GuidGuidIEnumerableKeyValuePair {
+    readonly key?: string;
+    readonly value?: string[] | undefined;
+}
+
 export interface NearbyBluetooth {
     hardwareAddress?: string | undefined;
     rssi?: number;
+    name?: string | undefined;
 }
 
 export interface Student {

@@ -1,7 +1,7 @@
 import React, {Fragment} from "react";
 import {Dismiss12Filled, LineHorizontal3Filled} from "@fluentui/react-icons";
 import {Disclosure, Menu, Transition} from '@headlessui/react';
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import {Toggle} from "../theme/Toggle";
 
 function classNames(...classes: any) {
@@ -16,8 +16,7 @@ const user = {
 }
 const navigation = [
     {name: 'Dashboard', href: '/', current: true},
-    {name: 'History', href: '/History', current: false},
-
+    {name: 'Groups', href: '/Groups', current: false},
 ]
 
 const userNavigation = [
@@ -28,7 +27,7 @@ const userNavigation = [
 export const TopNav = () => {
     return (
 
-        <div className="">
+        <div className="z-10">
             <Disclosure as="nav" className="bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
                 {({open}) => (
                     <>
@@ -41,11 +40,11 @@ export const TopNav = () => {
                                     <div className="hidden md:block">
                                         <div className="ml-10 flex items-baseline space-x-4">
                                             {navigation.map((item) => (
-                                                <Link
+                                                <NavLink
                                                     to={item.href}
                                                     key={item.name}
-                                                    className={classNames(
-                                                        item.current
+                                                    className={({isActive}) => classNames(
+                                                        isActive
                                                             ? 'bg-white text-gray-800 bg-opacity-90 dark:bg-gray-600 dark:bg-opacity-90 dark:text-white'
                                                             : 'text-white hover:bg-gray-700 hover:text-white hover:bg-opacity-70',
                                                         'px-3 py-2 rounded-md text-sm font-medium'
@@ -53,7 +52,7 @@ export const TopNav = () => {
                                                     aria-current={item.current ? 'page' : undefined}
                                                 >
                                                     {item.name}
-                                                </Link>
+                                                </NavLink>
                                             ))}
                                         </div>
                                     </div>
