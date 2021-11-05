@@ -29,7 +29,7 @@ public class BluetoothController : ControllerBase
     /// <summary>
     /// Two devices are said to be in a group if the rssi is bigger than this value
     /// </summary>
-    private const double RssiThreshold = -50;
+    private const double RssiThreshold = -90;
 
     [HttpPut("{hardwareAddress}")]
     public async Task<IActionResult>

@@ -68,7 +68,6 @@ const MyCustomGraph = () => {
     }
 
     const getStudentNode = (studentId: string) => {
-        console.log(epicGraph)
         const node = epicGraph?.findNode(node => node === studentId);
         if (!node) throw new Error("Student node not found");
         return node;
