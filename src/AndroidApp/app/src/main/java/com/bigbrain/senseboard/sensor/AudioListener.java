@@ -25,7 +25,7 @@ public class AudioListener {
     private MainActivity context;
     private AudioRecord recorder;
     private int bufferSize;
-    private static final int SAMPLE_RATE = 16000;
+    public static final int SAMPLE_RATE = 16000;
     private static final int CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT; //Maybe switch to AAC
 
@@ -53,18 +53,6 @@ public class AudioListener {
         recorder.stop();
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public float getAverageVolume(){
-        short[] buffer = new short[bufferSize];
-        recorder.read(buffer,0, bufferSize, AudioRecord.READ_NON_BLOCKING);
-
-        int sum = 0;
-        for(short i : buffer){
-            sum += Math.abs(i);
-        }
-        return (float)sum/bufferSize;
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)

@@ -1,5 +1,9 @@
 package com.bigbrain.senseboard.sensor;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.bigbrain.senseboard.MainActivity;
 
 import java.util.ArrayList;
@@ -13,30 +17,37 @@ import weka.core.Instances;
 
 import org.jtransforms.fft.DoubleFFT_1D;
 
-public class AudioHandler {
-    private Instances instances;
-    private Instance instance;
-    private Classifier classifier;
+public class AudioHandler extends Thread {
+    //private Instances instances;
+    //private Instance instance;
+    //private Classifier classifier;
 
-    private final MainActivity mainActivity;
+    private final AudioListener al;
 
-    private final int normalizeBound = 1000;
+    //private final MainActivity mainActivity;
 
-    private final DoubleFFT_1D FFT;
+    //private final int normalizeBound = 1000;
 
+    //private final DoubleFFT_1D FFT;
 
-
-
-
-
-    public final String[] sounds = {"crying", "laughing"};
+    private final int pollingDelay;
+    private String[] sounds = {"loud sound", "talking", "silent"};
+    private int[] resultCount = {0,0,0};
+    private double[] weights = {1, 1, 1};
+    private long timeTaken = 0;
+    private int lastResult = -1;
+    private int resultAmount;
 
     public final int bufferSize;
-    private String classifierPath = "16000spectrumforestundeep.model";
+    //private String classifierPath = "16000spectrumforestundeep.model";
 
-    public AudioHandler(int buffer, MainActivity mainActivity){
-        this.mainActivity = mainActivity;
+    public AudioHandler(AudioListener al, MainActivity mainActivity, int buffer){
+        //this.mainActivity = mainActivity;
         bufferSize = buffer;
+        this.al = al;
+        pollingDelay = 1000*buffer/this.al.SAMPLE_RATE;
+        resultAmount = this.al.SAMPLE_RATE/buffer;
+
         ArrayList<Attribute> attributes = new ArrayList<>();
 
         for(int i=1299; i<=bufferSize; i++){
@@ -48,7 +59,7 @@ public class AudioHandler {
             soundList.add(sounds[i]);
         }
         attributes.add(new Attribute("99999", soundList));
-
+/*
         instances = new Instances("Bruh", attributes, 5);
         instances.setClassIndex(instances.numAttributes()-1);
 
@@ -58,12 +69,43 @@ public class AudioHandler {
             e.printStackTrace();
         }
 
-
-
         FFT = new DoubleFFT_1D(bufferSize);
+ */
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void run() {
 
+        while(true) {
+            long time = System.currentTimeMillis();
+
+            short[] data = al.readBuffer(bufferSize);
+            //System.out.println("data size: " + data.length + ", last entry: " + data[15999]);
+
+            double result = classifyExperimental(data);
+
+            resultCount[(int) result] += 1;
+
+            if(resultSum() >=resultAmount){
+                System.out.println("time taken: " + (System.currentTimeMillis()-timeTaken)+ "\n");
+                determineAverageSound();
+                resultCount = new int[]{0, 0, 0, 0};
+                timeTaken = System.currentTimeMillis();
+            }
+
+
+            //System.out.println("audio classification: " + sounds[(int) result]);
+            //System.out.println("time taken: " + (System.currentTimeMillis()-time)+ "\n");
+
+            try {
+                sleep(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+/*
     public double classifyTimeAudio(short[] audioBuffer) {
         double result = -1;
         if(audioBuffer.length != bufferSize) return -1;
@@ -92,6 +134,8 @@ public class AudioHandler {
         return -1;
     }
 
+ */
+/*
     double classifySpectrumAudio(short[] input){
         double result = -1;
         if(input.length != bufferSize) return -1;
@@ -101,8 +145,8 @@ public class AudioHandler {
         if (max<1000) return 10;
 
         double[] fixedBuffer = toDoubleArray(input, (double) max);
-        
-        
+
+
         fixedBuffer = performFFT(fixedBuffer);
 
         instance = new DenseInstance(1, fixedBuffer);
@@ -118,13 +162,11 @@ public class AudioHandler {
         }
         return -1;
     }
+ */
 
     double classifyExperimental(short[] input){
-        double result = -1;
-        //if(input.length != bufferSize) return -1;
-
         short max = maxValue(input);
-        System.out.println("max: " + max);
+        //System.out.println("max: " + max);
 
         if(max<2000) return 2;
         else if(max<6000) return 1;
@@ -139,7 +181,7 @@ public class AudioHandler {
         }
         return max;
     }
-
+/*
     double maxValue(double[] input){
         double max = 1;
         for(double data : input) {
@@ -149,6 +191,8 @@ public class AudioHandler {
         return max;
     }
 
+ */
+/* unused
     double[] normalize(double[] input){
         double max = 1;
         for(double data : input) {
@@ -160,6 +204,8 @@ public class AudioHandler {
         return input;
     }
 
+ */
+/*
     double[] toDoubleArray(short[] input, double max){
         double[] output = new double[input.length];
         for(int i=0; i<input.length; i++){
@@ -168,7 +214,8 @@ public class AudioHandler {
         return output;
     }
 
-
+ */
+/*
      double[] performFFT(double[] input){
         double[] complexBuffer = Arrays.copyOf(input, 2*bufferSize);
         double[] output = new double[bufferSize/2-1299];
@@ -184,6 +231,8 @@ public class AudioHandler {
         return output;
     }
 
+ */
+/*
     double[] removeNoise(double[] input){
         double max = maxValue(input)*0.1;
         double[] output = input;
@@ -191,6 +240,33 @@ public class AudioHandler {
             if(output[i]<max) output[i] = 0;
         }
         return output;
+
+
+    }
+
+ */
+    int resultSum(){
+        int output = 0;
+        for (int i=0; i<resultCount.length; i++) output +=resultCount[i];
+        return output;
+    }
+    void determineAverageSound(){
+        double max = 0;
+        int bestSound = -1;
+        for(int i=0; i<resultCount.length; i++){
+            if((double)resultCount[i]*weights[i]>max){
+                max = resultCount[i]*weights[i];
+                bestSound = i;
+            }
+
+        }
+        lastResult = bestSound;
+        System.out.println("average sound: " + sounds[bestSound]);
+        System.out.println("resultCount" + Arrays.toString(resultCount));
+    }
+
+    int getLastResult(){
+        return lastResult;
     }
 
 
