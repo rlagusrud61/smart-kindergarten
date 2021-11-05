@@ -2,7 +2,7 @@ import {StudentHistory} from "./StudentHistory";
 import {Activity, Student, StudentsClient, VocalActivity} from "../../clients/rest/ApiClient";
 import {HeartFilled} from "@fluentui/react-icons";
 import React, {useEffect, useState} from "react";
-import {UseHub} from "../../Hooks/HubHooks";
+import {useHub} from "../../Hooks/HubHooks";
 import {StudentHub} from "../../clients/signalr/StudentHub";
 
 interface StudentProfileProps {
@@ -21,7 +21,7 @@ export function StudentProfile({student}: StudentProfileProps) {
 
 export const ProfileDetails = ({student}: StudentProfileProps) => {
 
-    const hub = UseHub(StudentHub, [student], student.id)
+    const hub = useHub(StudentHub, [student], student.id)
     const [currentActivity, setCurrentActivity] = useState<Activity>()
     const [currentVocalActivity, setCurrentVocalActivity] = useState<VocalActivity>()
 
