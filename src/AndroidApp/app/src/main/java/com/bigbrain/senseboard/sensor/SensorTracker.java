@@ -80,16 +80,13 @@ public class SensorTracker extends Thread {
                 for (SensorHandler sensorHandler : sensorHandlers) {
                     res = concatFloatArrays(res, sensorHandler.getLastSensorEvent().values);
                 }
-//                res = concatFloatArrays(res, new float[]{audioListener.getAverageVolume()});
                 this.sensorData.addRow(res);
                 cla.putValues(res);
 
                 if (record.get()) {
-//                    System.out.println("Recording to " + context.getFilesDir() + "/" + fu.getFileName());
                     fu.writeData(res);
                 }
             }
-
             try {
                 sleep(this.pollingDelay - Math.min((System.currentTimeMillis() - time), this.pollingDelay));
             } catch(InterruptedException e) {

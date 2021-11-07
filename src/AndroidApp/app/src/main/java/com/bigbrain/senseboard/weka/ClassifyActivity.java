@@ -90,6 +90,7 @@ public class ClassifyActivity {
             prediction = (int) cls.classifyInstance(instance);
             //System.out.println( "the prediction is: " + prediction);
             //System.out.println("the predicted activity is " + activity[prediction]);
+//            this.context.setCurrentActivity(activity[prediction]);
 
             int count = 0;
             //System.out.println("does readings contain the key? " + this.readings.containsKey(prediction));
@@ -213,12 +214,12 @@ public class ClassifyActivity {
 
             //System.out.println("new readings =" + readings);
             //Log.d(TAG, current_state);
-        }
+            }
 
 
         //System.out.println("readings cleared");
 
-    }
+        }
 }
 
 

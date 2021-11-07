@@ -23,7 +23,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bigbrain.senseboard.sensor.AudioHandler;
 import com.bigbrain.senseboard.sensor.AudioListener;
-import com.bigbrain.senseboard.sensor.AudioTester;
+//import com.bigbrain.senseboard.sensor.AudioTester;
 import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
 import com.bigbrain.senseboard.util.ApiService;
@@ -37,6 +37,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class MainActivity extends AppCompatActivity {
 
     //    private static final int PERMISSIONS_RECORD_AUDIO = 98;
+//    private static final int PERMISSIONS_RECORD_AUDIO = 98;
 //    private static final int PERMISSIONS_BLUETOOTH = 99;
     private final String apiCode;
 
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private AudioListener al;
     private BluetoothListener bl;
     private AudioHandler ah;
+//    private AudioTester at;
 
     private TextView time;
 
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public MainActivity() {
         apiCode = RandomStringUtils.random(6, false, true);
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -110,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPref.edit();
         buttonMAC.setOnClickListener(view -> {
             String mac = String.valueOf(enterMAC.getText());
-            System.out.println("bruh");
             editor.remove(getString(R.string.addressMAC));
             editor.putString(getString(R.string.addressMAC), mac);
             editor.apply();
@@ -123,6 +125,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Format a time in milliseconds to minutes and seconds. Also add a ':' character in the middle
+     * @param millis time in milliseconds that needs to be translated
+     * @return A String object representing the time in a readable format
+     */
     @SuppressLint("DefaultLocale")
     private String formatTime(long millis) {
         this.time.setTextColor(Color.BLACK);
@@ -158,6 +165,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Set up a sensorTracker object with the sensors that are required. This function has a
+     * variable number of input arguments, meaning that more or less sensors can be entered here
+     * if needed
+     */
     private void setupSensorTracker() {
         st = new SensorTracker(this, al, 20,
                 SensorManager.SENSOR_DELAY_FASTEST,   // Delay for all sensors
@@ -168,6 +180,11 @@ public class MainActivity extends AppCompatActivity {
         st.start();
     }
 
+    /**
+     * Create switches, one for each activity to be recorded. Each switch calls the
+     * 'deactivateOthers' function when its activated. This ensures that only one switch can be
+     * switched on at the same time
+     */
     private void setupSwitches() {
         SwitchCompat rec_0 = findViewById(R.id.rec_0);
         SwitchCompat rec_1 = findViewById(R.id.rec_1);

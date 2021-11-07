@@ -7,7 +7,7 @@ public enum Activities {
     FIGHTING("Fighting"),
     SITTING("Sitting"),
     FALLING("Falling"),
-        ;
+    ;
 
     public final String label;
 
