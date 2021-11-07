@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.bigbrain.senseboard.McWrap;
 import com.bigbrain.senseboard.NearbyDevice;
@@ -17,7 +16,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Map;
+
 
 public class ApiService {
 

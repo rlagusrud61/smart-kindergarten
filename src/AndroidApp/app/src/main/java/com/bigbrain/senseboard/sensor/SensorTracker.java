@@ -1,6 +1,5 @@
 package com.bigbrain.senseboard.sensor;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
@@ -20,10 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class SensorTracker extends Thread {
     private SensorHandler[] sensorHandlers;
     private final int pollingDelay;
-    private SensorData sensorData;
     private Context context;
     private FileUtil fu;
-    private AudioListener audioListener;
     private ClassifyActivity cla;
 
     private AtomicBoolean record = new AtomicBoolean(false);
@@ -39,13 +36,11 @@ public class SensorTracker extends Thread {
      */
     public SensorTracker(Context context, AudioListener al, int pollingDelay, int delay, int... sensorTypes) {
         this.context = context;
-        this.audioListener = al;
         this.pollingDelay = pollingDelay;
         sensorHandlers = new SensorHandler[sensorTypes.length];
         for (int i = 0; i < sensorHandlers.length; i++) {
             sensorHandlers[i] = new SensorHandler(context, sensorTypes[i], delay);
         }
-        sensorData = new SensorData();
         cla = new ClassifyActivity((MainActivity) context);
     }
 
@@ -80,7 +75,6 @@ public class SensorTracker extends Thread {
                 for (SensorHandler sensorHandler : sensorHandlers) {
                     res = concatFloatArrays(res, sensorHandler.getLastSensorEvent().values);
                 }
-                this.sensorData.addRow(res);
                 cla.putValues(res);
 
                 if (record.get()) {

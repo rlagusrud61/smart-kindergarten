@@ -38,9 +38,6 @@ public class BluetoothListener extends Thread {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(BluetoothDevice.ACTION_FOUND)) {
-//                    int rssi = intent.getShortExtra(BluetoothDevice.EXTRA_RSSI, Short.MIN_VALUE);
-//                    String name = intent.getStringExtra(BluetoothDevice.EXTRA_NAME);
-//                    System.out.println(name + ": " + device.getAddress() + " -> " + rssi);
 
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     System.out.println(intent.getStringExtra(BluetoothDevice.EXTRA_NAME) + " : " + device.getAddress());

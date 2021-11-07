@@ -1,11 +1,7 @@
 package com.bigbrain.senseboard.util;
 
 import android.content.Context;
-import android.widget.Switch;
-
 import androidx.appcompat.widget.SwitchCompat;
-
-import java.util.Arrays;
 
 
 public class SensorSwitchHandler {

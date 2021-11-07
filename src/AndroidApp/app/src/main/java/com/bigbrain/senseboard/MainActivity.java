@@ -30,8 +30,6 @@ import com.bigbrain.senseboard.util.SensorSwitchHandler;
 import com.bigbrain.senseboard.util.TimerUtil;
 import com.bigbrain.senseboard.weka.Activities;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 
 public class MainActivity extends AppCompatActivity {
 

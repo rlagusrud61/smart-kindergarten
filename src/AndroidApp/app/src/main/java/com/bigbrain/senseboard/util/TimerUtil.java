@@ -1,6 +1,5 @@
 package com.bigbrain.senseboard.util;
 
-import android.content.Context;
 import android.os.CountDownTimer;
 
 import com.bigbrain.senseboard.MainActivity;
