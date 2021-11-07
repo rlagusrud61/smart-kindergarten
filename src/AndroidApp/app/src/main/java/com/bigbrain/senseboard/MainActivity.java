@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         apiService.updateActivity(activity);
     }
 
+
+
     private void setupMAC() {
         this.enterMAC = findViewById(R.id.editTextMAC);
         this.buttonMAC = findViewById(R.id.buttonMAC);
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupAudioHandler() {
-        ah = new AudioHandler(al,  this, audioBuffer);
+        ah = new AudioHandler(al,  this, audioBuffer, apiService);
         ah.start();
     }
 

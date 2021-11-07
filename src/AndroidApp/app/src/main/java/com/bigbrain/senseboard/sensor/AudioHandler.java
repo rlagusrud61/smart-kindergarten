@@ -5,6 +5,9 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import com.bigbrain.senseboard.MainActivity;
+import com.bigbrain.senseboard.util.ApiService;
+import com.bigbrain.senseboard.weka.VocalActivities;
+import com.google.protobuf.Api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,30 +26,33 @@ public class AudioHandler extends Thread {
 
     private final AudioListener al;
 
-    //private final MainActivity mainActivity;
+    private final MainActivity mainActivity;
 
     //private final int normalizeBound = 1000;
 
     //private final DoubleFFT_1D FFT;
 
     private final int pollingDelay;
-    private String[] sounds = {"loud sound", "talking", "silent"};
+    private VocalActivities[] sounds = {VocalActivities.CRYLAUGH, VocalActivities.TALKING, VocalActivities.SILENT};
     private int[] resultCount = new int[3];
     private double[] weights = {1, 1, 1};
     private long timeTaken = 0;
-    private int lastResult = -1;
+    private VocalActivities lastResult;
     private int resultAmount;
+    private ApiService apiService;
 
     public final int bufferSize;
     //private String classifierPath = "16000spectrumforestundeep.model";
 
-    public AudioHandler(AudioListener al, MainActivity mainActivity, int buffer){
-        //this.mainActivity = mainActivity;
+    public AudioHandler(AudioListener al, MainActivity mainActivity, int buffer, ApiService apiService){
+        this.mainActivity = mainActivity;
         bufferSize = buffer;
         this.al = al;
         pollingDelay = 1000*buffer/this.al.SAMPLE_RATE;
-        resultAmount = this.al.SAMPLE_RATE/buffer;
+        resultAmount = 2*this.al.SAMPLE_RATE/buffer;
+        this.apiService = apiService;
 
+        /*
         ArrayList<Attribute> attributes = new ArrayList<>();
 
         for(int i=1299; i<=bufferSize; i++){
@@ -55,9 +61,11 @@ public class AudioHandler extends Thread {
 
         ArrayList<String> soundList = new ArrayList<>();
         for(int i=0; i<sounds.length; i++){
-            soundList.add(sounds[i]);
+            soundList.add(sounds[i].label);
         }
         attributes.add(new Attribute("99999", soundList));
+
+         */
 /*
         instances = new Instances("Bruh", attributes, 5);
         instances.setClassIndex(instances.numAttributes()-1);
@@ -90,8 +98,8 @@ public class AudioHandler extends Thread {
                 determineAverageSound();
                 resultCount = new int[3];
                 timeTaken = System.currentTimeMillis();
+                sendLastResult();
             }
-
 
             //System.out.println("audio classification: " + sounds[(int) result]);
             //System.out.println("time taken: " + (System.currentTimeMillis()-time)+ "\n");
@@ -260,14 +268,12 @@ public class AudioHandler extends Thread {
             }
 
         }
-        lastResult = bestSound;
-        System.out.println("average sound: " + sounds[bestSound]);
+        lastResult = sounds[bestSound];
+        //System.out.println("average sound: " + sounds[bestSound]);
         //System.out.println("resultCount" + Arrays.toString(resultCount));
     }
 
-    int getLastResult(){
-        return lastResult;
-    }
+    void sendLastResult(){ apiService.updateVocalActivity(lastResult); }
 
 
 

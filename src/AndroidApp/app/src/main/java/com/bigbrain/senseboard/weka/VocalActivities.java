@@ -5,7 +5,8 @@ public enum VocalActivities {
     LAUGHING("Laughing"),
     SHOUTING("Shouting"),
     TALKING("Talking"),
-    SILENT("Silent");
+    SILENT("Silent"),
+    CRYLAUGH("Crying or laughing");
 
     public final String label;
     VocalActivities(String label) {
