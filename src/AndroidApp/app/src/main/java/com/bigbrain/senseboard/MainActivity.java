@@ -24,7 +24,6 @@ import com.android.volley.toolbox.Volley;
 import com.bigbrain.senseboard.sensor.AudioHandler;
 import com.bigbrain.senseboard.sensor.AudioListener;
 import com.bigbrain.senseboard.sensor.AudioTester;
-import com.bigbrain.senseboard.sensor.BluetoothHandler;
 import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
 import com.bigbrain.senseboard.util.ApiService;
@@ -34,34 +33,34 @@ import com.bigbrain.senseboard.weka.Activities;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.util.Locale;
-
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static final int PERMISSIONS_RECORD_AUDIO = 98;
+    //    private static final int PERMISSIONS_RECORD_AUDIO = 98;
 //    private static final int PERMISSIONS_BLUETOOTH = 99;
+    private final String apiCode;
 
     private SensorTracker st;
-
-    private BluetoothListener bl;
-    private BluetoothHandler bh;
-
     private AudioListener al;
+    private BluetoothListener bl;
     private AudioHandler ah;
-    private AudioTester at;
 
     private TextView time;
 
     private EditText enterMAC;
     private Button buttonMAC;
     private TextView currentActivity;
-    private final long MEASUREMENT_DELAY = 3000;
+    private final long MEASUREMENT_DELAY = 1000;
 
     private RequestQueue volleyQueue;
     private ApiService apiService;
     private final McWrap mcWrap = new McWrap();
 
+    private int audioBuffer = 4000;
+
+    public MainActivity() {
+        apiCode = RandomStringUtils.random(6, false, true);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -88,10 +87,6 @@ public class MainActivity extends AppCompatActivity {
         this.time.setText(formatTime(MEASUREMENT_DELAY));
 
         this.currentActivity = findViewById(R.id.currentActivity);
-
-        setupMAC();
-
-
     }
 
     /**
@@ -202,7 +197,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupAudioHandler() {
-        ah = new AudioHandler(250, this);
+        ah = new AudioHandler(al,  this, audioBuffer);
+        ah.start();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -211,10 +207,6 @@ public class MainActivity extends AppCompatActivity {
         bl.start();
     }
 
-    private void setupAudioTester() {
-        at = new AudioTester(ah, al, 1000);
-        at.start();
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)

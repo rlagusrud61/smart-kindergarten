@@ -10,6 +10,7 @@ import android.media.AudioRecord;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -24,11 +25,11 @@ public class AudioListener {
     private MainActivity context;
     private AudioRecord recorder;
     private int bufferSize;
-    private static final int SAMPLE_RATE = 8000;
+    public static final int SAMPLE_RATE = 16000;
     private static final int CHANNELS = AudioFormat.CHANNEL_IN_MONO;
     private static final int ENCODING = AudioFormat.ENCODING_PCM_16BIT; //Maybe switch to AAC
 
-    private static final int BUFFER_CONSTANT = 2048;
+    private static final int BUFFER_CONSTANT = SAMPLE_RATE*2;
 
 
 
@@ -39,8 +40,9 @@ public class AudioListener {
         bufferSize = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNELS, ENCODING);
         System.out.println("audioBuffer" + bufferSize);
 
-        this.recorder = new AudioRecord(MediaRecorder.AudioSource.MIC,
+        this.recorder = new AudioRecord(MediaRecorder.AudioSource.VOICE_RECOGNITION,
                 SAMPLE_RATE, CHANNELS, ENCODING, BUFFER_CONSTANT);
+
     }
 
     public void startAudioRec() {
@@ -52,30 +54,14 @@ public class AudioListener {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public float getAverageVolume(){
-        short[] buffer = new short[bufferSize];
-        recorder.read(buffer,0, bufferSize, AudioRecord.READ_NON_BLOCKING);
-
-        int sum = 0;
-        for(short i : buffer){
-            sum += Math.abs(i);
-        }
-        return (float)sum/bufferSize;
-    }
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
-    public short[] readBuffer(int bufferSize) {
-        short[] data = new short[bufferSize];
-        recorder.read(data, 0, bufferSize, AudioRecord.READ_NON_BLOCKING);
+    public short[] readBuffer(int arraySize) {
+        short[] data = new short[arraySize];
+        recorder.read(data, 0, arraySize, AudioRecord.READ_NON_BLOCKING);
         return data;
     }
 
-    public float getAverageFrequency(){ // TODO: implement FFT
-
-        return -1;
-    }
 
 
 

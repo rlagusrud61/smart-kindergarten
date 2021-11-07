@@ -2,7 +2,7 @@
 import {useEffect, useState} from "react";
 import {IHubClient} from "../clients/signalr/ActivityHub";
 
-export function UseHub<T extends IHubClient>(hubType: new (...args: any) => T, deps: any[], ...params: any[]): T | undefined {
+export function useHub<T extends IHubClient>(hubType: new (...args: any) => T, deps: any[], ...params: any[]): T | undefined {
 
     const [hub, setHub] = useState<T>();
 
