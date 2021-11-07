@@ -16,6 +16,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bigbrain.senseboard.MainActivity;
 
@@ -46,7 +47,11 @@ public class AudioListener {
     }
 
     public void startAudioRec() {
-        recorder.startRecording();
+        if (recorder.getState() == AudioRecord.STATE_INITIALIZED) {
+            recorder.startRecording();
+        } else {
+            Log.d("Bruh", "Cannot initialize AudioRecord object in background");
+        }
     }
 
     public void stopAudioRec() {
