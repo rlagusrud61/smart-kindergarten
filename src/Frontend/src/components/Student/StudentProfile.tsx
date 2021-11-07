@@ -58,6 +58,10 @@ export const ProfileDetails = ({student}: StudentProfileProps) => {
                         <h1 className="text-gray-700 dark:text-white align-middle font-bold text-3xl mb-1">{student.name}</h1>
                         {/* TODO this definitely needs styling but like 😴😴 */}
                         <h3 className="dark:text-white align-middle text-xl">Age : <b className="text-gray-600">{student.age}</b></h3>
+
+                    </div>
+
+                    <div>
                         <h3 className="dark:text-white align-middle text-xl">Current Activity
                             : <b className="text-gray-600"> {currentActivity}</b></h3>
                         <h3 className="dark:text-white align-middle text-xl">Current 🎙️🎶 Activity
@@ -65,10 +69,10 @@ export const ProfileDetails = ({student}: StudentProfileProps) => {
                     </div>
                 </div>
 
-                <div className="p-4 grid grid-cols-3">
-                    <HeartFilled className="dark:text-white self-center" color="#BBB" fontSize={"4.5rem"}/>
-                    <h1 className="dark:text-white col-span-2 self-center text-2xl">90 BPM</h1>
-                </div>
+                {/*<div className="p-4 grid grid-cols-3">*/}
+                {/*    <HeartFilled className="dark:text-white self-center" color="#BBB" fontSize={"4.5rem"}/>*/}
+                {/*    <h1 className="dark:text-white col-span-2 self-center text-2xl">90 BPM</h1>*/}
+                {/*</div>*/}
             </div>
         </div>)
 }

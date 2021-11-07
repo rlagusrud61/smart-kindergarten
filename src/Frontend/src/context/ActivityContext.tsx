@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {ActivityHub} from "../clients/signalr/ActivityHub";
 import {useHub} from "../Hooks/HubHooks";
-import {ToastDark, ToastDefault} from "../utils/ToastUtil";
+import {ToastDefault} from "../utils/ToastUtil";
 import {EventHistory, Student, UrgentEvent} from "../clients/rest/ApiClient";
 
 export interface ActivityContextProperties {
@@ -42,6 +42,8 @@ export const GetUrgentEventMessage = (student:Student, e:UrgentEvent) : string =
             return `${student.name} is crying`
         case UrgentEvent.Falling:
             return `${student.name} has fallen 🪦`
+        case UrgentEvent.Fighting:
+            return `${student.name} is fighting someone!`
         default:
             return `Unknown Event`
     }

@@ -619,6 +619,7 @@ export enum UrgentEvent {
     Crying = "Crying",
     PeePeePooPoo = "PeePeePooPoo",
     Dying = "Dying",
+    Fighting = "Fighting",
 }
 
 export enum VocalActivity {
