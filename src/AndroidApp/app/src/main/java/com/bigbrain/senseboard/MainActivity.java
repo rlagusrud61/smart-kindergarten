@@ -63,10 +63,8 @@ public class MainActivity extends AppCompatActivity {
                 , Permissions.PERMISSION_RECORD_AUDIO);
 
 
-        setupSensorTracker();
-        setupSwitches();
-        setupAudio();
-        setupAudioHandler();
+
+
         setupMAC();
 
         volleyQueue = Volley.newRequestQueue(this);
@@ -76,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
         this.time.setText(formatTime(MEASUREMENT_DELAY));
 
         this.currentActivity = findViewById(R.id.currentActivity);
+
+        setupSensorTracker();
+        setupSwitches();
+        setupAudio();
+        setupAudioHandler();
     }
 
     /**

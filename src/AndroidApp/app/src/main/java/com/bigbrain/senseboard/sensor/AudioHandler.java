@@ -37,7 +37,7 @@ public class AudioHandler extends Thread {
     private int[] resultCount = new int[3];
     private double[] weights = {1, 1, 1};
     private long timeTaken = 0;
-    private VocalActivities lastResult;
+    private VocalActivities lastResult = VocalActivities.SILENT;
     private int resultAmount;
     private ApiService apiService;
 
