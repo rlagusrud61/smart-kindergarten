@@ -15,7 +15,7 @@ import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
-import org.jtransforms.fft.DoubleFFT_1D;
+//import org.jtransforms.fft.DoubleFFT_1D;
 
 public class AudioHandler extends Thread {
     //private Instances instances;

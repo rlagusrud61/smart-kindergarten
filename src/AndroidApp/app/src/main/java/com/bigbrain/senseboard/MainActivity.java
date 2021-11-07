@@ -23,7 +23,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.bigbrain.senseboard.sensor.AudioHandler;
 import com.bigbrain.senseboard.sensor.AudioListener;
-//import com.bigbrain.senseboard.sensor.AudioTester;
 import com.bigbrain.senseboard.sensor.BluetoothListener;
 import com.bigbrain.senseboard.sensor.SensorTracker;
 import com.bigbrain.senseboard.util.ApiService;
@@ -36,16 +35,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public class MainActivity extends AppCompatActivity {
 
-    //    private static final int PERMISSIONS_RECORD_AUDIO = 98;
-//    private static final int PERMISSIONS_RECORD_AUDIO = 98;
-//    private static final int PERMISSIONS_BLUETOOTH = 99;
-    private final String apiCode;
-
     private SensorTracker st;
     private AudioListener al;
     private BluetoothListener bl;
     private AudioHandler ah;
-//    private AudioTester at;
 
     private TextView time;
 
@@ -59,10 +52,6 @@ public class MainActivity extends AppCompatActivity {
     private final McWrap mcWrap = new McWrap();
 
     private int audioBuffer = 4000;
-
-    public MainActivity() {
-        apiCode = RandomStringUtils.random(6, false, true);
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -81,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         setupAudio();
         setupAudioHandler();
         setupMAC();
-//        setupAudioTester();
 
         volleyQueue = Volley.newRequestQueue(this);
         apiService = new ApiService(volleyQueue, mcWrap);
