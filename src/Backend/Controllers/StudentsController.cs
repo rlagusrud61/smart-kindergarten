@@ -58,7 +58,7 @@ public class StudentsController : ControllerBase
         var student = await _context.Children.FirstOrDefaultAsync(m => m.DeviceHardwareAddress == hardwareAddress);
         if (student is null) return BadRequest("The provided hardware address does not belong to a known student");
 
-        
+
         _history.StudentVocalActivity[student.Id] = activity;
         await _studentHub.Clients.Group(student.Id.ToString()).ReceiveVocalActivityUpdate(activity);
         await _eventService.OnActivityUpdateAsync(student);
@@ -82,7 +82,7 @@ public class StudentsController : ControllerBase
             ? _history.StudentVocalActivity[student.Id]
             : null);
     }
-    
+
     [HttpGet("History/{studentId:guid}")]
     public async Task<ActionResult<List<KeyValuePair<UrgentEvent, DateTime>>>> GetHistory(Guid studentId)
     {
@@ -91,6 +91,6 @@ public class StudentsController : ControllerBase
         if (!_history.RecentUrgentEvents.ContainsKey(studentId))
             return Ok(new List<KeyValuePair<UrgentEvent, DateTime>>());
 
-        return _history.RecentUrgentEvents[studentId].ToList();
+        return _history.RecentUrgentEvents[studentId].ToList().OrderBy(m => m.Value).ToList();
     }
 }
