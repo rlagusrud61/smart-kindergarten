@@ -64,14 +64,12 @@ public class UrgentEventService
         return null;
     }
 
-    private static UrgentEvent? GetEventForActivities(Activity activity, VocalActivity vocalActivity)
-    {
-        return (activity, vocalActivity) switch
+    private static UrgentEvent? GetEventForActivities(Activity activity, VocalActivity vocalActivity) =>
+        (activity, vocalActivity) switch
         {
             (Activity.Falling, _) => UrgentEvent.Falling,
             (Activity.Fighting, not VocalActivity.Laughing) => UrgentEvent.Fighting,
             (_, VocalActivity.Crying) => UrgentEvent.Crying,
             _ => null
         };
-    }
 }
