@@ -2,7 +2,7 @@ import "./Groups.scss"
 import {SigmaContainer, useSigma} from "react-sigma-v2";
 import "react-sigma-v2/lib/react-sigma-v2.css";
 import getNodeProgramImage from "sigma/rendering/webgl/programs/node.image";
-import {Attributes, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import SpringSupervisor from "./layout-spring";
 import {BluetoothClient, StudentsClient} from "../../../clients/rest/ApiClient";
 import {ImagePathForStudent} from "../../Student/StudentProfile";
@@ -26,8 +26,11 @@ const MyCustomGraph = () => {
         // Add missing edges
         nearbyStudents.forEach(nearbyStudent => {
             // graph.dropEdge(studentId, nearbyStudent)
-            if (!epicGraph?.hasDirectedEdge(studentId, nearbyStudent)) {
-                epicGraph?.addDirectedEdgeWithKey(getEdgeKey(studentId, nearbyStudent), studentId, nearbyStudent, {color: "#999", size: 5});
+            if (!epicGraph?.hasEdge(studentId, nearbyStudent) && !epicGraph?.hasEdge(nearbyStudent, studentId)) {
+                epicGraph?.addEdgeWithKey(getEdgeKey(studentId, nearbyStudent), studentId, nearbyStudent, {
+                    color: "#999",
+                    size: 5
+                });
             }
         })
 
@@ -35,33 +38,33 @@ const MyCustomGraph = () => {
         const node = getStudentNode(studentId);
         if (!node) throw new Error("Invalid node");
         const validKeys = nearbyStudents.map(nearbyStudent => getEdgeKey(studentId, nearbyStudent));
+        const validKeysTheSequel = nearbyStudents.map(nearbyStudent => getEdgeKey(nearbyStudent, studentId));
         const toBeDropped: string[] = [];
-        epicGraph?.directedEdges(node).forEach(dedge => {
-            if (!validKeys.includes(dedge)) {
+        epicGraph?.edges(node).forEach(dedge => {
+            if (!validKeys.includes(dedge) && !validKeysTheSequel.includes(dedge)) {
                 toBeDropped.push(dedge)
             }
         })
 
         toBeDropped.forEach(dropIt => {
-            if(!epicGraph) return;
+            if (!epicGraph) return;
             // This edge is no longer valid, drop it
-            epicGraph.dropEdge(dropIt);
             // epicGraph.directedEdges().splice(epicGraph.directedEdges().indexOf(dedge),1);
             // epicGraph.filterDirectedEdges(node, e => e !== dedge)
             // epicGraph.updateDirectedEdgeWithKey(dedge, () => {})
             // epicGraph.updateNode(node)
 
-            try{
-                epicGraph.updateDirectedEdge(dropIt, (attributes: any) => {
-                    return {
-                        ...attributes,
-                        color: "white" // Cause this library is the worst goddamn shit ever
-                    }
-                })
-            }catch (e){
+            // epicGraph.clearEdges();
+
+            try {
+                epicGraph.updateEdgeAttribute(dropIt, 'color', (val) => {
+                    val = "white"
+                });
+            } catch (e) {
                 //dfsjkafsd ;jklafsd
             }
 
+            epicGraph.dropEdge(dropIt);
 
             // console.log(dedge.split('---')[1])
             // epicGraph.updateDirectedEdge(studentId, dedge.split('---')[1], (attributes: any) => {
@@ -200,7 +203,7 @@ export function Groups() {
 
     return (
         <main role="main" className="proximity-container">
-            <SigmaContainer graphOptions={{type: "directed"}}
+            <SigmaContainer graphOptions={{type: "undirected"}}
                             initialSettings={{
                                 nodeProgramClasses: {image: getNodeProgramImage()},
                                 // labelRenderer: drawLabel,
