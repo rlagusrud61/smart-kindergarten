@@ -1,4 +1,5 @@
 ﻿using KindergartenApi.Models.DB;
+using KindergartenApi.Models.DB.Activity;
 using KindergartenApi.Models.DTO;
 
 namespace KindergartenApi.Services;
@@ -9,4 +10,5 @@ public class HistoryService
     public Dictionary<Guid, Activity> StudentActivity { get; } = new();
     public Dictionary<Guid, VocalActivity> StudentVocalActivity { get; } = new();
     public Dictionary<Guid, IEnumerable<Guid>> StudentProximity { get; } = new();
+    public Dictionary<Guid, Dictionary<UrgentEvent, DateTime>> RecentUrgentEvents { get; } = new();
 }

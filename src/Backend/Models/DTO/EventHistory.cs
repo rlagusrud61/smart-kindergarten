@@ -1,4 +1,5 @@
 ﻿using KindergartenApi.Models.DB;
+using KindergartenApi.Models.DB.Activity;
 
 namespace KindergartenApi.Models.DTO;
 

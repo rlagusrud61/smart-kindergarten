@@ -161,8 +161,6 @@ public class ClassifyActivity {
         //System.out.println("in put values " + Arrays.toString(row));
         activityPredict();
         getPredictedActivity();
-        this.context.setCurrentActivity(current_state);
-
     }
 
 
@@ -186,40 +184,23 @@ public class ClassifyActivity {
     }
 
     public void getPredictedActivity() {
-        //System.out.println("get predicted activity is called");
         int sum = 0;
         for (int v : readings.values()) {
             sum += v;
-            //System.out.println(sum);
         }
 
-        //Log.d(TAG, "Old activity: " + oldPredictionActivity);
-        //if it reaches 150 readings
+        // When it reaches n readings
         if (sum == 25) {
-            //Log.d("CLASSIFIER", "SUM REACHED");
-            //System.out.println("reached sum == 150");
             int prediction = getActivityWithMostOccurrence();
             current_state = Activities.values()[prediction];
             Log.d(TAG, String.valueOf(current_state));
             for (int i = 0; i < 6; i++) {
                 this.readings.put(i, 0);
             }
-//            int count = 0;
-//            if (this.theCount.containsKey(current_state)) {
-//                count = this.theCount.get(current_state);
-//            }
-//            theCount.put(current_state, count+1);
-//            System.out.println(theCount);
 
-
-            //System.out.println("new readings =" + readings);
-            //Log.d(TAG, current_state);
-            }
-
-
-        //System.out.println("readings cleared");
-
+            this.context.setCurrentActivity(current_state);
         }
+    }
 }
 
 

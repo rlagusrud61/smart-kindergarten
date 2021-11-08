@@ -1,4 +1,4 @@
-﻿namespace KindergartenApi.Models.DB;
+﻿namespace KindergartenApi.Models.DB.Activity;
 
 public enum Activity
 {
