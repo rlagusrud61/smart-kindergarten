@@ -3,6 +3,7 @@ using KindergartenApi.Hubs;
 using KindergartenApi.Models.DB;
 using KindergartenApi.Models.DB.Activity;
 using KindergartenApi.Models.DTO;
+using KindergartenApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +16,16 @@ public class DebugController : ControllerBase
 {
     private readonly IHubContext<ActivityHub, IActivityHub> _activityHub;
     private readonly IHubContext<StudentHub, IStudentHub> _studentHub;
+    private readonly HistoryService _history;
     private readonly GartenContext _context;
 
     public DebugController(IHubContext<ActivityHub, IActivityHub> activityHub,
-        IHubContext<StudentHub, IStudentHub> studentHub, GartenContext context)
+        IHubContext<StudentHub, IStudentHub> studentHub, GartenContext context, HistoryService history)
     {
         _activityHub = activityHub;
         _studentHub = studentHub;
         _context = context;
+        _history = history;
     }
 
     [HttpPut("AddEvent")]
@@ -54,6 +57,14 @@ public class DebugController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
+
+    [HttpDelete("ClearStudentEventHistory", Name = "ClearStudentEventHistory")]
+    public Task<IActionResult> ClearStudentEventHistory(Guid id)
+    {
+        _history.RecentUrgentEvents.Remove(id);
+        return Task.FromResult<IActionResult>(Ok());
+    }
+
     [HttpDelete("DeleteStudent", Name = "DeleteStudent")]
     public async Task<IActionResult> DeleteStudent(Guid id)
     {
@@ -63,5 +74,4 @@ public class DebugController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
-    
 }

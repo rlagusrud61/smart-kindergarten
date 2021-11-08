@@ -82,4 +82,15 @@ public class StudentsController : ControllerBase
             ? _history.StudentVocalActivity[student.Id]
             : null);
     }
+    
+    [HttpGet("History/{studentId:guid}")]
+    public async Task<ActionResult<List<KeyValuePair<UrgentEvent, DateTime>>>> GetHistory(Guid studentId)
+    {
+        var student = await _context.Children.FirstOrDefaultAsync(m => m.Id == studentId);
+        if (student is null) return BadRequest("The provided id does not belong to a known student");
+        if (!_history.RecentUrgentEvents.ContainsKey(studentId))
+            return Ok(new List<KeyValuePair<UrgentEvent, DateTime>>());
+
+        return _history.RecentUrgentEvents[studentId].ToList();
+    }
 }
