@@ -67,7 +67,7 @@ public class ApiService {
         try {
             String json = mapper.writerFor(REF_OBJECT).writeValueAsString(devices);
             StringRequest request = new StringRequest(Request.Method.PUT,
-                    PROXIMITY_URL + mcWrap.hardwareAddress,
+                    PROXIMITY_URL + encodeURL(mcWrap.hardwareAddress),
                     response -> Log.i("VOLLEY", response), error -> Log.e("VOLLEY", error.toString())) {
                 @Override
                 public String getBodyContentType() {
