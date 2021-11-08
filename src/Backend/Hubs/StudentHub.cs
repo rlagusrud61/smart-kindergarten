@@ -1,4 +1,5 @@
 ﻿using KindergartenApi.Models.DB;
+using KindergartenApi.Models.DB.Activity;
 using Microsoft.AspNetCore.SignalR;
 
 namespace KindergartenApi.Hubs;

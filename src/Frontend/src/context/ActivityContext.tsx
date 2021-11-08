@@ -45,6 +45,7 @@ export const GetUrgentEventMessage = (student:Student, e:UrgentEvent) : string =
         case UrgentEvent.Fighting:
             return `${student.name} is fighting someone!`
         default:
+            console.log("Received unknown event", e)
             return `Unknown Event`
     }
 }

@@ -1,6 +1,7 @@
 using KindergartenApi.Context;
 using KindergartenApi.Hubs;
 using KindergartenApi.Models.DB;
+using KindergartenApi.Models.DB.Activity;
 using KindergartenApi.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -14,16 +15,17 @@ public class StudentsController : ControllerBase
 {
     private readonly GartenContext _context;
     private readonly HistoryService _history;
-    private readonly IHubContext<ActivityHub, IActivityHub> _activityHub;
     private readonly IHubContext<StudentHub, IStudentHub> _studentHub;
+    private readonly UrgentEventService _eventService;
 
     public StudentsController(GartenContext context, HistoryService history,
-        IHubContext<StudentHub, IStudentHub> studentHub, IHubContext<ActivityHub, IActivityHub> activityHub)
+        IHubContext<StudentHub, IStudentHub> studentHub, IHubContext<ActivityHub, IActivityHub> activityHub,
+        UrgentEventService eventService)
     {
         _context = context;
         _history = history;
         _studentHub = studentHub;
-        _activityHub = activityHub;
+        _eventService = eventService;
     }
 
     [HttpGet]
@@ -45,7 +47,8 @@ public class StudentsController : ControllerBase
         if (student is null) return BadRequest("The provided hardware address does not belong to a known student");
 
         _history.StudentActivity[student.Id] = activity;
-        _studentHub.Clients.Group(student.Id.ToString()).ReceiveActivityUpdate(activity);
+        await _studentHub.Clients.Group(student.Id.ToString()).ReceiveActivityUpdate(activity);
+        await _eventService.OnActivityUpdateAsync(student);
         return Ok();
     }
 
@@ -55,8 +58,10 @@ public class StudentsController : ControllerBase
         var student = await _context.Children.FirstOrDefaultAsync(m => m.DeviceHardwareAddress == hardwareAddress);
         if (student is null) return BadRequest("The provided hardware address does not belong to a known student");
 
+        
         _history.StudentVocalActivity[student.Id] = activity;
-        _studentHub.Clients.Group(student.Id.ToString()).ReceiveVocalActivityUpdate(activity);
+        await _studentHub.Clients.Group(student.Id.ToString()).ReceiveVocalActivityUpdate(activity);
+        await _eventService.OnActivityUpdateAsync(student);
         return Ok();
     }
 

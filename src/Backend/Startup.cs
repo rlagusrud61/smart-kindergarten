@@ -59,6 +59,7 @@ public class Startup
             });
 
         services.AddSingleton<HistoryService>();
+        services.AddTransient<UrgentEventService>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

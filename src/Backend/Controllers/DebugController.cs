@@ -1,6 +1,7 @@
 ﻿using KindergartenApi.Context;
 using KindergartenApi.Hubs;
 using KindergartenApi.Models.DB;
+using KindergartenApi.Models.DB.Activity;
 using KindergartenApi.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
