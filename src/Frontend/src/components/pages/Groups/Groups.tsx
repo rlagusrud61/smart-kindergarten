@@ -35,35 +35,41 @@ const MyCustomGraph = () => {
         const node = getStudentNode(studentId);
         if (!node) throw new Error("Invalid node");
         const validKeys = nearbyStudents.map(nearbyStudent => getEdgeKey(studentId, nearbyStudent));
+        const toBeDropped: string[] = [];
         epicGraph?.directedEdges(node).forEach(dedge => {
             if (!validKeys.includes(dedge)) {
-                // This edge is no longer valid, drop it
-                epicGraph.dropEdge(dedge);
-                // epicGraph.directedEdges().splice(epicGraph.directedEdges().indexOf(dedge),1);
-                // epicGraph.filterDirectedEdges(node, e => e !== dedge)
-                // epicGraph.updateDirectedEdgeWithKey(dedge, () => {})
-                // epicGraph.updateNode(node)
-
-                try{
-                    epicGraph.updateDirectedEdge(dedge, (attributes: any) => {
-                        return {
-                            ...attributes,
-                            color: "white" // Cause this library is the worst goddamn shit ever
-                        }
-                    })
-                }catch (e){
-                    //dfsjkafsd ;jklafsd
-                }
-
-
-                // console.log(dedge.split('---')[1])
-                // epicGraph.updateDirectedEdge(studentId, dedge.split('---')[1], (attributes: any) => {
-                //     return {
-                //         ...attributes,
-                //         color: "white" // Cause this library is the worst goddamn shit ever
-                //     }
-                // })
+                toBeDropped.push(dedge)
             }
+        })
+
+        toBeDropped.forEach(dropIt => {
+            if(!epicGraph) return;
+            // This edge is no longer valid, drop it
+            epicGraph.dropEdge(dropIt);
+            // epicGraph.directedEdges().splice(epicGraph.directedEdges().indexOf(dedge),1);
+            // epicGraph.filterDirectedEdges(node, e => e !== dedge)
+            // epicGraph.updateDirectedEdgeWithKey(dedge, () => {})
+            // epicGraph.updateNode(node)
+
+            try{
+                epicGraph.updateDirectedEdge(dropIt, (attributes: any) => {
+                    return {
+                        ...attributes,
+                        color: "white" // Cause this library is the worst goddamn shit ever
+                    }
+                })
+            }catch (e){
+                //dfsjkafsd ;jklafsd
+            }
+
+
+            // console.log(dedge.split('---')[1])
+            // epicGraph.updateDirectedEdge(studentId, dedge.split('---')[1], (attributes: any) => {
+            //     return {
+            //         ...attributes,
+            //         color: "white" // Cause this library is the worst goddamn shit ever
+            //     }
+            // })
         })
     }
 
