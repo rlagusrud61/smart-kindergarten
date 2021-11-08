@@ -22,7 +22,7 @@ public class ApiService {
 
     private static final String URL_BASE = "https://ss.mineapple.net/api/";
     private static final String ACTIVITY_URL = URL_BASE + "students/activity/";
-    private static final String VOCAL_ACTIVITY_URL = URL_BASE + "students/activity/";
+    private static final String VOCAL_ACTIVITY_URL = URL_BASE + "students/vocalActivity/";
     private static final String PROXIMITY_URL = URL_BASE + "bluetooth/";
     private final RequestQueue queue;
     private final McWrap mcWrap;
@@ -32,10 +32,14 @@ public class ApiService {
         this.mcWrap = mcWrap;
     }
 
+    public String encodeURL(String url) {
+        return url.replace(":", "%3A");
+    }
+
     public void updateActivity(Activities activity) {
         if (mcWrap.hardwareAddress == null) return;
         StringRequest request = new StringRequest(Request.Method.PUT,
-                String.format("%s?activity=%s&hardwareAddress=%s", ACTIVITY_URL, activity.name(), mcWrap.hardwareAddress),
+                String.format("%s?activity=%s&hardwareAddress=%s", ACTIVITY_URL, activity.name(), encodeURL(mcWrap.hardwareAddress)),
                 response -> {}, error -> Log.e("VOLLEY", error.toString())) {
         };
         queue.add(request);
@@ -44,7 +48,7 @@ public class ApiService {
     public void updateVocalActivity(VocalActivities activity) {
         if (mcWrap.hardwareAddress == null) return;
         StringRequest request = new StringRequest(Request.Method.PUT,
-                String.format("%s?activity=%s&hardwareAddress=%s", VOCAL_ACTIVITY_URL, activity.name(), mcWrap.hardwareAddress),
+                String.format("%s?activity=%s&hardwareAddress=%s", VOCAL_ACTIVITY_URL, activity.name(), encodeURL(mcWrap.hardwareAddress)),
                 response -> {}, error -> Log.e("VOLLEY", error.toString())) {
         };
         queue.add(request);

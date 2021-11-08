@@ -47,11 +47,12 @@ public class AudioListener {
     }
 
     public void startAudioRec() {
-        if (recorder.getState() == AudioRecord.STATE_INITIALIZED) {
-            recorder.startRecording();
-        } else {
-            Log.d("Bruh", "Cannot initialize AudioRecord object in background");
-        }
+        recorder.startRecording();
+
+//        if (recorder.getState() == AudioRecord.STATE_INITIALIZED) {
+//        } else {
+//            Log.d("Bruh", "Cannot initialize AudioRecord object in background");
+//        }
     }
 
     public void stopAudioRec() {
