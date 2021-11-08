@@ -68,7 +68,10 @@ public class ApiService {
             String json = mapper.writerFor(REF_OBJECT).writeValueAsString(devices);
             StringRequest request = new StringRequest(Request.Method.PUT,
                     PROXIMITY_URL + encodeURL(mcWrap.hardwareAddress),
-                    response -> Log.i("VOLLEY", response), error -> Log.e("VOLLEY", error.toString())) {
+                    response -> Log.i("VOLLEY", response), error -> {
+                Log.e("VOLLEY", error.toString());
+                Log.e("BALL", new String(error.networkResponse.data));
+            }) {
                 @Override
                 public String getBodyContentType() {
                     return "application/json; charset=utf-8";
