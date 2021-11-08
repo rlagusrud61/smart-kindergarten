@@ -22,7 +22,7 @@ public class ApiService {
 
     private static final String URL_BASE = "https://ss.mineapple.net/api/";
     private static final String ACTIVITY_URL = URL_BASE + "students/activity/";
-    private static final String VOCAL_ACTIVITY_URL = URL_BASE + "students/activity/";
+    private static final String VOCAL_ACTIVITY_URL = URL_BASE + "students/vocalactivity/";
     private static final String PROXIMITY_URL = URL_BASE + "bluetooth/";
     private final RequestQueue queue;
     private final McWrap mcWrap;
