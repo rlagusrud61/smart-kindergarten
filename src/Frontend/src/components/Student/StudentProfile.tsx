@@ -58,10 +58,6 @@ export const ProfileDetails = ({student}: StudentProfileProps) => {
                         <h1 className="text-gray-700 dark:text-white align-middle font-bold text-3xl mb-1">{student.name}</h1>
                         {/* TODO this definitely needs styling but like 😴😴 */}
                         <h3 className="dark:text-white align-middle text-xl">Age : <b className="text-gray-600">{student.age}</b></h3>
-
-                    </div>
-
-                    <div>
                         <h3 className="dark:text-white align-middle text-xl">Current Activity
                             : <b className="text-gray-600"> {currentActivity}</b></h3>
                         <h3 className="dark:text-white align-middle text-xl">Current 🎙️🎶 Activity
